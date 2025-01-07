@@ -1,7 +1,19 @@
 import { SignInButton } from "@/components/custom/sign-in"
 import Image from "next/image"
+import { auth } from "@/auth"
+import { getUser } from "@/lib/db/models/users"
+import { redirect } from "next/navigation"
 
-export default function Signin(){
+export default async function Signin(){
+    const session = await auth()
+
+    if(session){
+        const user = await getUser(session.user?.id!);
+        if(!user.bio){
+            redirect("/profile");
+        }
+    }
+
     return (
         <div className="flex flex-col w-full h-screen bg-black text-white">
             <nav className="p-2 flex flex-row gap-2 items-center border-b border-dashed border-neutral-600">
