@@ -27,7 +27,7 @@ Refer to the env.example file for the environment variables examples
 
 1. Go to [Developers](https://github.com/settings/developers)
 2. 'New OAuth App'
-3. Input your homepage URL
+3. Input your homepage URL: http://localhost:3000 
 4. Input the authorisation url: http://localhost:3000/api/auth/callback/github
 5. Copy the Client ID to AUTH_GITHUB_ID
 6. Copy the Client Secret to AUTH_GITHUB_SECRET
