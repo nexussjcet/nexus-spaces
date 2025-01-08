@@ -11,6 +11,8 @@ export default async function Signin(){
         const user = await getUser(session.user?.id!);
         if(!user.bio){
             redirect("/profile");
+        }else{
+            redirect("/");
         }
     }
 
