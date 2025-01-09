@@ -23,12 +23,16 @@ export default async function Signin(){
                 <h2 className="text-md md:text-xl font-bold">Nexus Spaces</h2>
             </nav>
             <div className="flex flex-col justify-center items-center w-full h-full">
-                <div className="flex flex-col gap-2 border border-dashed border-neutral-600 p-6 md:p-9">
+                <div className="flex flex-col gap-2 items-center border border-dashed border-neutral-600 p-6 md:p-9">
+                <Image src="/nexus.webp" width={180} height={180} alt="Nexus"/>
                     <h1 className="text-2xl font-bold">Hey there!</h1>
-                    <p>Your dream team is one click away</p>
+                    <p>Your dream team is one click away!</p>
                     <SignInButton/>
                 </div>
             </div>
+            <footer className="p-2 flex flex-row justify-center items-center border-t border-dashed border-neutral-600">
+                <p className="text-md md:text-l text-neutral-400">© 2025 <a href="https://github.com/nexussjcet/nexus-spaces">Nexus Spaces</a>: Built by students for students</p>
+            </footer>
         </div>
     )
 }
