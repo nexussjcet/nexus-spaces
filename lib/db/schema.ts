@@ -16,7 +16,10 @@ export const users = pgTable("user", {
     email: text("email").unique(),
     emailVerified: timestamp("emailVerified", { mode: "date" }),
     image: text("image"),
-    bio: text()
+    bio: text(),
+    githubUsername: text("github_username"),
+    topLanguages: text("top_languages").default('[]').$type<string>(),
+    topRepositories: text("top_repositories").default('[]').$type<string>()
 })
 
 export const accounts = pgTable(
