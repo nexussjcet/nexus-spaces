@@ -91,3 +91,20 @@ export const authenticators = pgTable(
         },
     ]
 )
+
+export const chats = pgTable("chats", {
+    id: text()
+        .primaryKey()
+        .$defaultFn(() => crypto.randomUUID()),
+    name: text().default("New chat"),
+    userId: text().references(() => users.id)
+})
+
+export const messages = pgTable("messages", {
+    id: text()
+        .primaryKey()
+        .$defaultFn(() => crypto.randomUUID()),
+    role: text().default("user"),
+    content: text(),
+    chatId: text().references(() => chats.id)
+})
