@@ -1,46 +1,80 @@
 # Nexus Spaces
 
-Nexus spaces is a AI driven social media platform where SJCET students can find and connect with developers, designers and other skilled individuals.
+**Nexus Spaces** is an AI-driven social media platform where SJCET students can connect with developers, designers, and other skilled individuals.
 
-# Project Set Up
+---
 
-## Building and running locally
+## Project Setup
 
-To build and run this project in your local dev environment, follow the instructions below. Be sure you have [Node.js](https://nodejs.org/) installed before you start.
+### Prerequisites
+Before setting up the project, ensure you have the following:
+- [Node.js](https://nodejs.org/) (v14 or higher)
+- npm (bundled with Node.js)
+- A [Supabase](https://supabase.com/) account
+- A GitHub account for OAuth setup
 
-## Step 1: Install dependencies
+### Steps to Build and Run Locally
 
-Run `npm install`
+Follow these steps to set up and run Nexus Spaces on your local machine:
 
-Refer to the env.example file for the environment variables examples
+#### Step 1: Install Dependencies
+1. Clone the repository to your local machine:
+   ```bash
+   git clone <repository_url>
+   cd <repository_name>
+   ```
+2. Install the required dependencies:
+   ```bash
+   npm install
+   ```
+3. Refer to the `env.example` file for example environment variables.
 
-## Step 2: Create a .env file with the example variables
+#### Step 2: Create a `.env` File
+- Copy the `env.example` file:
+  ```bash
+  cp env.example .env
+  ```
+- Update the `.env` file with your specific environment variables.
 
-Remember to not add your keys to the example env file and instead add it to the actual .env file
+#### Step 3: Set Up Supabase
+1. Create a new project in [Supabase](https://supabase.com/).
+2. Navigate to `Connect > ORMs`.
+3. Under `Tools`, select **Drizzle**.
+4. Copy the `DATABASE_URL` and enter the database password in the `.env` file.
 
-## Step 3: Create a new [Supabase](https://supabase.com/) account
+#### Step 4: Configure GitHub OAuth
+1. Go to [GitHub Developers Settings](https://github.com/settings/developers).
+2. Create a new OAuth app:
+   - Homepage URL: `http://localhost:3000`
+   - Authorization callback URL: `http://localhost:3000/api/auth/callback/github`
+3. Copy the **Client ID** and **Client Secret**:
+   - Paste them into the `.env` file under `AUTH_GITHUB_ID` and `AUTH_GITHUB_SECRET`.
 
-1. Create a new project in Supabase
-2. Go to 'Connect>ORMS'
-3. Under 'Tools', select 'Drizzle'
-4. Copy the url into 'DATABASE_URL and paste the password that you entered for the project
+#### Step 5: Generate the Authentication Secret Key
+1. Open your local repository in a terminal.
+2. Run the following command to install necessary packages:
+   ```bash
+   npx auth
+   ```
+3. Generate the secret key:
+   ```bash
+   npx auth secret
+   ```
+4. Copy the generated key and paste it into `AUTH_SECRET` in the `.env` file.
 
-## Step 4: Create an OAuth on GitHub
+#### Step 6: Run the Development Server
+- Start the development server:
+  ```bash
+  npm run dev
+  ```
+- Open your browser and navigate to: [http://localhost:3000](http://localhost:3000)
 
-1. Go to [Developers](https://github.com/settings/developers)
-2. 'New OAuth App'
-3. Input your homepage URL: http://localhost:3000 
-4. Input the authorisation url: http://localhost:3000/api/auth/callback/github
-5. Copy the Client ID to AUTH_GITHUB_ID
-6. Copy the Client Secret to AUTH_GITHUB_SECRET
+---
 
-## Step 5: Generate the Authentication Secret Key
-1. Go to your local repo terminal and run: `npx auth`
-2. Agree to install any necessary packages
-3. Go to your terminal and run: `npx auth secret`
-4. Copy and paste the key into AUTH_SECRET
+## Contributing
+If you'd like to contribute to Nexus Spaces, please submit a pull request or create an issue.
 
-## Step 6: Run the app
 
-Run the development server `npm run dev` 
-You should be able to the page open in: http://localhost:3000
+---
+
+Feel free to reach out for support or questions!
