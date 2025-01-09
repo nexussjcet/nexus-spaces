@@ -3,16 +3,12 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { SignInButton } from "@/components/custom/sign-in";
 import { getUser } from "@/lib/db/models/users";
+import { SignOutButton } from "@/components/custom/sign-out";
 
 export default async function Home() {
     const session = await auth();
 
-    if (session?.user) {
-        const user = await getUser(session.user.id!);
-        if (!user.bio) {
-            redirect("/profile");
-        }
-    } else {
+    if (!session?.user) {
         return (
             <div className="flex flex-col w-full h-screen bg-black text-white">
                 <nav className="p-2 flex flex-row gap-2 items-center border-b border-dashed border-neutral-600">
@@ -34,14 +30,26 @@ export default async function Home() {
         );
     }
 
+    const user = await getUser(session.user.id!);
+    if (!user.bio) {
+        redirect("/profile");
+    }
+
     return (
         <div className="flex flex-col w-full h-screen bg-black text-white">
             <nav className="p-2 flex flex-row gap-2 items-center border-b border-dashed border-neutral-600">
                 <Image src="/nexus.webp" width={60} height={60} alt="Nexus"/>
                 <h2 className="text-md md:text-xl font-bold">Nexus Spaces</h2>
+                <div className="ml-auto">
+                    <SignOutButton />
+                </div>
             </nav>
             <div className="flex flex-col justify-center items-center w-full h-full">
-                <h1>Welcome back!</h1>
+                <div className="flex flex-col gap-4 items-center">
+                    <h1 className="text-2xl font-bold">Welcome back, {user.name}!</h1>
+                    <p className="text-neutral-400">{user.bio}</p>
+                    <a href="/profile" className="text-blue-400 hover:underline">View Profile</a>
+                </div>
             </div>
         </div>
     );
