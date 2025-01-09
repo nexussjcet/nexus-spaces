@@ -16,7 +16,7 @@ Refer to the env.example file for the environment variables examples
 
 ## Step 2: Create a .env file with the example variables
 
-Remember to not add your keys to the example env file and to the actual .env file
+Remember to not add your keys to the example env file and instead add it to the actual .env file
 
 ## Step 3: Create a new [Supabase](https://supabase.com/) account
 
