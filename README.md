@@ -44,7 +44,7 @@ Follow these steps to set up and run Nexus Spaces on your local machine:
 
 #### Step 4: Configure GitHub OAuth
 1. Go to [GitHub Developers Settings](https://github.com/settings/developers).
-2. Create a new OAuth app:
+2. Create a new OAuth app and add:
    - Homepage URL: `http://localhost:3000`
    - Authorization callback URL: `http://localhost:3000/api/auth/callback/github`
 3. Copy the **Client ID** and **Client Secret**:
