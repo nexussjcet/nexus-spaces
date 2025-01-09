@@ -31,7 +31,7 @@ export default async function Signin(){
                 </div>
             </div>
             <footer className="p-2 flex flex-row justify-center items-center border-t border-dashed border-neutral-600">
-                <p className="text-md md:text-l font-bold">© 2025 <a href="https://github.com/nexussjcet/nexus-spaces">Nexus Spaces</a>: Built by students for students</p>
+                <p className="text-md md:text-l text-neutral-400">© 2025 <a href="https://github.com/nexussjcet/nexus-spaces">Nexus Spaces</a>: Built by students for students</p>
             </footer>
         </div>
     )
