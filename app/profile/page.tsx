@@ -1,4 +1,5 @@
 import Image from "next/image"
+import Link from "next/link"
 import { auth } from "@/auth"
 import { SignOutButton } from "@/components/custom/sign-out"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -33,7 +34,8 @@ export default async function Profile() {
             <nav className="px-4 py-2 flex flex-row gap-2 items-center border-b border-dashed border-neutral-600">
                 <Image src="/nexus.webp" width={60} height={60} alt="Nexus" />
                 <h2 className="text-md md:text-xl font-bold">Nexus Spaces</h2>
-                <div className="ml-auto">
+                <div className="ml-auto flex flex-row gap-6 items-center">
+                    <Link href="/">Home</Link>
                     <SignOutButton />
                 </div>
             </nav>
