@@ -91,7 +91,7 @@ export default async function Profile() {
                                                     </span>
                                                 )}
                                                 <span>⭐ {repo.stars}</span>
-                                                <span>🔱 {repo.forks}</span>
+                                                <span>Forks: {repo.forks}</span>
                                             </div>
                                         </div>
                                     </a>
