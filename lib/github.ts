@@ -4,6 +4,7 @@ interface Repository {
     description: string;
     stargazers_count: number;
     language: string;
+    forks_count: number;
 }
 
 interface LanguageStats {
@@ -39,6 +40,7 @@ export async function fetchGitHubData(accessToken: string) {
             url: repo.html_url,
             description: repo.description,
             stars: repo.stargazers_count,
+            forks: repo.forks_count,
             language: repo.language
         }));
 
