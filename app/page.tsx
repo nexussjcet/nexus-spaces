@@ -81,15 +81,17 @@ export default async function Profile() {
                                                 <p className="text-sm text-neutral-400">{repo.description}</p>
                                             )}
                                             <div className="flex gap-4 text-sm text-neutral-400">
-                                                {repo.language && (
-                                                    <span>
-                                                        <span 
-                                                            className="inline-block w-3 h-3 rounded-full mr-1" 
-                                                            style={{ backgroundColor: getLanguageColor(repo.language) }}
-                                                        />
-                                                        {repo.language}
-                                                    </span>
-                                                )}
+                                                <div className="flex gap-3">
+                                                    {repo.languages?.map((lang: { name: string; percentage: number }) => (
+                                                        <span key={lang.name} className="flex items-center">
+                                                            <span 
+                                                                className="inline-block w-3 h-3 rounded-full mr-1" 
+                                                                style={{ backgroundColor: getLanguageColor(lang.name) }}
+                                                            />
+                                                            {lang.name} {lang.percentage}%
+                                                        </span>
+                                                    ))}
+                                                </div>
                                                 <span>⭐ {repo.stars}</span>
                                                 <span>Forks: {repo.forks}</span>
                                             </div>
