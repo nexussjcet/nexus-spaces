@@ -1,14 +1,16 @@
 "use client";
-import Image from "next/image";
 import {
     SidebarProvider,
     SidebarTrigger
 } from "@/components/ui/sidebar"
 import { ChatSidebar } from "@/components/custom/chat-sidebar";
-import { SignOutButton } from "@/components/custom/sign-out";
-import { Textarea } from "../ui/textarea";
 
 import { useState } from "react";
+import {useQuery} from "@tanstack/react-query";
+import {useChat} from "ai/react";
+import { Button } from "../ui/button";
+import { Send } from "lucide-react";
+import { Input } from "@/components/ui/input"
 
 interface Props{
     chats: {
@@ -18,17 +20,59 @@ interface Props{
     }[]
 }
 
+interface Message{
+    id: string,
+    role: "user" | "system",
+    content: string
+}
+
 export function ChatPage({chats}: Props) {
     const [selectedChat, setSelectedChat] = useState(chats[0].id)
+    const {data} = useQuery({
+        queryKey: ["messages"],
+        queryFn: async () => {
+            const response = await fetch(`/api/chat/${selectedChat}`);
+
+            if(response.ok){
+                return (await response.json()) as {messages: Message[]};
+            }else{
+                throw new Error(response.statusText);
+            }
+        }
+    })
+
+    const {messages, error, input, handleInputChange, handleSubmit} = useChat({
+        api: `/api/chat/${selectedChat}`,
+        initialMessages: data?.messages
+    })
 
     return (
         <SidebarProvider>
             <ChatSidebar chats={chats} selectedChat={selectedChat}/>
             <div className="flex flex-col h-screen w-full bg-black text-white p-4">
                 <SidebarTrigger />
-                <div className="flex flex-col w-full h-full">
-                    <Textarea placeholder="Ask me anything..." className="mt-auto" rows={3}/>
+                <div className="flex flex-col gap-4 h-full p-4 items-center overflow-y-auto">
+                    {
+                        messages.map(message => (
+                            <div className="flex flex-col w-full max-w-[700px]" key={message.id}>
+                                <h3 className="font-bold text-neutral-400">{message.role === "user" ? "You" : "Spacey"}</h3>
+                                <p>{message.content}</p>
+                            </div>
+                        ))
+                    }
                 </div>
+                <form className="flex flex-col w-full h-fit gap-2 border p-2" onSubmit={handleSubmit}>
+                    <Input name="prompt" 
+                        placeholder="Ask me anything..." 
+                        className="mt-auto border-0"
+                        value={input}
+                        onChange={handleInputChange}
+                        />
+                    <Button className="w-fit ml-auto" type="submit">
+                        <Send/>
+                        Send
+                    </Button>
+                </form>
             </div>
         </SidebarProvider>
     )

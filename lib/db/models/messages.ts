@@ -7,6 +7,6 @@ export async function getMessages(chatId: string){
 }
 
 export async function addMessage(message: InferInsertModel<typeof messages>){
-    await db.insert(messages).values(message);
+    return await db.insert(messages).values(message).returning();
 }
 

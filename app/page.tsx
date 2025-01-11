@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { ChatPage } from "@/components/custom/chat-page";
 import { addChat, getUserChats } from "@/lib/db/models/chats";
+import { QueryProvider } from "@/components/custom/query-provider";
 
 export default async function Home() {
     const session = await auth();
@@ -17,6 +18,8 @@ export default async function Home() {
     }
 
     return (
-        <ChatPage chats={chats}/>
+        <QueryProvider>
+            <ChatPage chats={chats}/>
+        </QueryProvider>
     );
 }
