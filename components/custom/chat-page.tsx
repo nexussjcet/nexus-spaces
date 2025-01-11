@@ -12,6 +12,8 @@ import { Button } from "../ui/button";
 import { Send } from "lucide-react";
 import { Input } from "@/components/ui/input"
 
+import Markdown from "react-markdown"
+
 interface Props{
     chats: {
         id: string,
@@ -41,7 +43,9 @@ export function ChatPage({chats}: Props) {
         }
     })
 
-    const {messages, error, input, handleInputChange, handleSubmit} = useChat({
+
+
+    const {messages, error, input, isLoading, handleInputChange, handleSubmit} = useChat({
         api: `/api/chat/${selectedChat}`,
         initialMessages: data?.messages
     })
@@ -51,12 +55,12 @@ export function ChatPage({chats}: Props) {
             <ChatSidebar chats={chats} selectedChat={selectedChat}/>
             <div className="flex flex-col h-screen w-full bg-black text-white p-4">
                 <SidebarTrigger />
-                <div className="flex flex-col gap-4 h-full p-4 items-center overflow-y-auto">
+                <div className="flex flex-col-reverse gap-4 h-full p-4 items-center overflow-y-auto scroller">
                     {
-                        messages.map(message => (
+                        messages.toReversed().map(message => (
                             <div className="flex flex-col w-full max-w-[700px]" key={message.id}>
                                 <h3 className="font-bold text-neutral-400">{message.role === "user" ? "You" : "Spacey"}</h3>
-                                <p>{message.content}</p>
+                                <Markdown>{message.content}</Markdown>
                             </div>
                         ))
                     }
