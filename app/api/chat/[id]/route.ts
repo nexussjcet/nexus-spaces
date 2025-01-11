@@ -1,6 +1,5 @@
 import { addMessage, getMessages } from "@/lib/db/models/messages";
 import { streamAIResponse } from "@/lib/agent";
-import { CoreMessage } from "ai";
 
 export async function GET(request: Request, {params}: {params: Promise<{id: string}>}){
     const id = (await params).id;
@@ -16,7 +15,7 @@ export async function POST(request: Request, {params}: {params: Promise<{id: str
     await addMessage({
         chatId: id,
         role: "user",
-        content: messages.at(-1)
+        content: messages.at(-1).content
     });
 
     const result = await streamAIResponse(messages, id);
