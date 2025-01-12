@@ -15,3 +15,9 @@ export async function getChats(){
 export async function getUserChats(userId: string){
     return await db.select().from(chats).where(eq(chats.userId, userId));
 }
+
+export async function updateTitle(chatId: string, title: string){
+    return await db.update(chats).set({
+        name: title
+    }).where(eq(chats.id, chatId)).returning();
+}
