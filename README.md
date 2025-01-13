@@ -48,8 +48,9 @@ Follow these steps to set up the project in your local development environment:
 1. Refer to the `env.example` file for examples of the required environment variables.
 2. Create a `.env` file in the root of the project.
 3. Copy and configure the variables from `env.example` into your `.env` file.
-   
+
    Given Below is the format:
+
 ```plaintext
 - `DATABASE_URL`: Your PostgreSQL database URL
 - `AUTH_SECRET`: Generate using `openssl rand -base64 32`
@@ -127,6 +128,7 @@ Follow these steps to set up the project in your local development environment:
    ```
 
    > **Note:** The `db:push` command synchronizes your Schema with your database schema without using migrations. This is particularly useful during prototyping and local development.
+
 ---
 
 ## Step 8: Run the Application
