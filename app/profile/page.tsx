@@ -44,26 +44,26 @@ export default async function Profile() {
                 </div>
             </nav>
             <div className="flex  justify-center   w-full h-full ">
-                <div className="flex portrait:flex-wrap  portrait:justify-center justify-around   items-center  xl:w-[1500px] md:w-[1200px]   portrait:h-full "> 
-                    <div className="flex flex-col items-center  portrait:w-full  portrait:mb-7 portrait:mt-5 portrait:p-5    ">
-                        <Avatar className="w-20 h-20">
+                <div className="flex portrait:flex-wrap  portrait:justify-center justify-around   items-center  xl:w-[1500px] md:w-[1200px]   portrait:h-full">
+                    <div className="flex flex-col items-center  portrait:w-full  portrait:mb-7 portrait:mt-5 portrait:p-5 border border-white p-10 rounded-xl">
+                        <Avatar className="w-20 h-20 mb-5">
                             <AvatarImage src={user.image!}/>
                             <AvatarFallback>{user.name?.slice(0, 2).toUpperCase()}</AvatarFallback>
                         </Avatar>
                         <div className="flex flex-col gap-2  w-full">
-                            <label>Username</label>
+                            <label className="text-sm mt-2">Username</label>
                                 <Input value={user.name!} disabled/>
-                            <label>Email</label>
+                            <label className="text-sm mt-2">Email</label>
                                 <Input value={user.email!} disabled/>
                             <form action={updateBio} className="flex flex-col gap-2">
-                                <label>Bio</label>
+                                <label className="text-sm mt-2">Bio</label>
                                 <Input type="hidden" name="id" value={user.id}/>
                                 <Textarea name="bio" defaultValue={user.bio ?? ""} placeholder="Tell us something about yourself" rows={4} required/>
-                                <Button type="submit">Update bio</Button>
                             </form>
+                            <Button type="submit" className="rounded-xl font-semibold mt-2">Update Bio</Button>
                         </div>
                     </div>
-                    
+
                 <div className="">
                     {JSON.parse(user.topRepositories!).map((repo,index)=>(
                     <><a
@@ -100,7 +100,7 @@ export default async function Profile() {
                   </a></>
                 ))}</div>
                 </div>
-                
+
             </div>
         </div>
     )
