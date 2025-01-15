@@ -20,6 +20,7 @@ interface User {
   emailVerified: Date | null;
   image: string | null;
   bio: string | null;
+  topRepositories: string | null;
 }
 
 export default async function Profile() {
@@ -31,6 +32,16 @@ export default async function Profile() {
   } else {
     user = await getUser(session.user?.id!);
   }
+
+  let repositories = [];
+  try {
+    if (user?.topRepositories) {
+      repositories = JSON.parse(user.topRepositories);
+    }
+  } catch (error) {
+    console.error("Error parsing topRepositories:", error);
+  }
+
   return (
     <div className="flex flex-col w-full portrait:h-full h-screen bg-black text-white ">
       <nav className="px-4 py-2 flex flex-row gap-2 items-center border-b border-dashed border-neutral-600">
@@ -72,16 +83,10 @@ export default async function Profile() {
             </div>
           </div>
 
-          <div className="">
-            {JSON.parse(user.topRepositories!).map((repo, index) => (
-              <>
-                <a
-                  key={repo.name}
-                  href={repo.url}
-                  className="group block p-2"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+          <div className="grid gap-4 p-4">
+            {repositories.length > 0 ? (
+              repositories.map((repo: any, index: number) => (
+                <div key={index} className="group block">
                   <div className="rounded-lg border p-4 transition-all hover:bg-accent">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
@@ -90,27 +95,31 @@ export default async function Profile() {
                           {repo.name}
                         </h3>
                       </div>
-                      <Badge variant="secondary">
-                        {repo.languages[0].name}
-                      </Badge>
+                      {repo.languages?.[0] && (
+                        <Badge variant="secondary">
+                          {repo.languages[0].name}
+                        </Badge>
+                      )}
                     </div>
                     <p className="mt-2 text-sm text-muted-foreground line-clamp-2">
-                      {repo.description}
+                      {repo.description || "No description available"}
                     </p>
                     <div className="mt-3 flex items-center gap-4">
                       <div className="flex items-center gap-1 text-sm text-muted-foreground">
                         <StarIcon className="h-4 w-4" />
-                        <span>{repo.stars.toLocaleString()}</span>
+                        <span>{repo.stars?.toLocaleString() ?? 0}</span>
                       </div>
                       <div className="flex items-center gap-1 text-sm text-muted-foreground">
                         <GitForkIcon className="h-4 w-4" />
-                        <span>{repo.forks.toLocaleString()}</span>
+                        <span>{repo.forks?.toLocaleString() ?? 0}</span>
                       </div>
                     </div>
                   </div>
-                </a>
-              </>
-            ))}
+                </div>
+              ))
+            ) : (
+              <p className="text-muted-foreground">No repositories found.</p>
+            )}
           </div>
         </div>
       </div>
