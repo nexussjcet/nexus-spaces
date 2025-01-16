@@ -77,7 +77,7 @@ export default async function Profile() {
                   required
                 />
               </form>
-              <Button type="submit" className="rounded-xl font-semibold mt-2">
+              <Button type="submit" className="font-semibold mt-2">
                 Update Bio
               </Button>
             </div>

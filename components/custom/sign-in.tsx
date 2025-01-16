@@ -9,7 +9,7 @@ export function SignInButton() {
         await signIn("github", { redirectTo: "/profile" });
       }}
     >
-      <Button type="submit" className="rounded-xl">
+      <Button type="submit">
         Sign in with GitHub
       </Button>
     </form>
