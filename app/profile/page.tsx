@@ -54,7 +54,7 @@ export default async function Profile() {
       </nav>
       <div className="flex  justify-center   w-full h-full ">
         <div className="flex portrait:flex-wrap  portrait:justify-center justify-around   items-center  xl:w-[1500px] md:w-[1200px]   portrait:h-full">
-          <div className="flex flex-col items-center  portrait:w-full  portrait:mb-7 portrait:mt-5 portrait:p-5 border border-white p-10 rounded-xl">
+          <div className="flex flex-col items-center  portrait:w-full  portrait:mb-7 portrait:mt-5 portrait:p-5 md:border border-white p-10">
             <Avatar className="w-20 h-20 mb-5">
               <AvatarImage src={user.image!} />
               <AvatarFallback>
@@ -62,7 +62,7 @@ export default async function Profile() {
               </AvatarFallback>
             </Avatar>
             <div className="flex flex-col gap-2  w-full">
-              <label className="text-sm mt-2">Username</label>
+              <label className="text-sm mt-2">Name</label>
               <Input value={user.name!} disabled />
               <label className="text-sm mt-2">Email</label>
               <Input value={user.email!} disabled />
@@ -83,11 +83,11 @@ export default async function Profile() {
             </div>
           </div>
 
-          <div className="grid gap-4 p-4">
+          <div className="grid md:grid-cols-2 gap-4 p-4">
             {repositories.length > 0 ? (
               repositories.map((repo: any, index: number) => (
                 <div key={index} className="group block">
-                  <div className="rounded-lg border p-4 transition-all hover:bg-accent">
+                  <div className="border p-4 transition-all hover:bg-accent">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <GitBranchIcon className="h-5 w-5 text-muted-foreground" />
