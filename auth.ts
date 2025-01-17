@@ -6,7 +6,13 @@ import { handleGitHubSignIn } from "./lib/auth/github-handler";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: DrizzleAdapter(db),
-  providers: [GitHub],
+  providers: [
+    GitHub({
+      clientId: process.env.AUTH_GITHUB_ID,
+      clientSecret: process.env.AUTH_GITHUB_SECRET,
+      scope: "read:user repo", // Add this line to get repository access
+    }),
+  ],
   pages: {
     signIn: "/",
   },
