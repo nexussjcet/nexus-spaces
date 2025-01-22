@@ -5,6 +5,7 @@ import {
   text,
   primaryKey,
   integer,
+  json,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccountType } from "next-auth/adapters";
 
@@ -94,19 +95,20 @@ export const authenticators = pgTable(
   ],
 );
 
-export const chats = pgTable("chats", {
-  id: text()
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-  name: text().default("New chat"),
-  userId: text().references(() => users.id),
-});
+// export const chats = pgTable("chats", {
+//   id: text()
+//     .primaryKey()
+//     .$defaultFn(() => crypto.randomUUID()),
+//   name: text().default("New chat"),
+//   userId: text().references(() => users.id),
+// });
 
-export const messages = pgTable("messages", {
+export const conversations = pgTable("conversations", {
   id: text()
     .primaryKey()
     .$defaultFn(() => crypto.randomUUID()),
-  role: text().default("user"),
-  content: text(),
-  chatId: text().references(() => chats.id),
+  title: text(),
+  timestamp: text(),
+  messages: json().array(),
+  userId: text().references(() => users.id),
 });

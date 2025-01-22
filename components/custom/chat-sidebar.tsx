@@ -10,17 +10,18 @@ import {
 import { PenBoxIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
+import { Conversation } from "@/types";
 
 interface Props {
-  chats: {
-    id: string;
-    name: string | null;
-    userId: string | null;
-  }[];
-  selectedChat: string;
+  conversations: Conversation[];
+  setConversations: React.Dispatch<React.SetStateAction<Conversation[]>>;
+  selectedConversations: string;
+  setSelectedConversation: React.Dispatch<React.SetStateAction<string>>;
+  handleNewChat: () => Promise<void>;
 }
 
-export function ChatSidebar({ chats, selectedChat }: Props) {
+export function ChatSidebar({ conversations, selectedConversations, setSelectedConversation, handleNewChat }: Props) {
+
   return (
     <Sidebar className="bg-black">
       <SidebarHeader>
@@ -33,18 +34,27 @@ export function ChatSidebar({ chats, selectedChat }: Props) {
         </Link>
       </SidebarHeader>
       <SidebarContent>
-        {chats.map((chat) => (
+        {conversations.map((conv) => (
           <div
-            key={chat.id}
+            key={conv.id}
             className={cn(
               "px-4 py-2 cursor-pointer hover:bg-neutral-900",
-              chat.id === selectedChat && "bg-neutral-900",
+              conv.id === selectedConversations && "bg-neutral-900",
             )}
+            onClick={() => setSelectedConversation(conv.id)}
           >
-            <h3>{chat.name}</h3>
+            <h3>{conv.title}</h3>
           </div>
         ))}
       </SidebarContent>
+      <SidebarFooter>
+        <Button
+          className="mb-3"
+          onClick={handleNewChat}
+        >
+          New Chat
+        </Button>
+      </SidebarFooter>
     </Sidebar>
   );
 }
