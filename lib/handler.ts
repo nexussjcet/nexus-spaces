@@ -37,7 +37,6 @@ export async function* sendMessage(convId: string, chatId: string, message: stri
           text: message,
           files: files,
         },
-        isUser: true,
       },
     }),
   });
