@@ -1,5 +1,5 @@
 import { v4 as uuid4 } from 'uuid';
-import { imageFormat, textFormat } from './format';
+import { base64 } from './format';
 
 export const initConversation = async (user: { id: string }) => {
   const convId = uuid4();
@@ -17,10 +17,6 @@ export const initConversation = async (user: { id: string }) => {
   });
 };
 
-// export const fetchConversation = async (convId: string) => {
-//   return await fetch(`/api/chat/${convId}`);
-// }
-
 export const fetchConversations = async (userId: string) => {
   return await fetch(`/api/user/${userId}?action=get-conversations`);
 }
@@ -35,12 +31,13 @@ export async function* sendMessage(convId: string, chatId: string, message: stri
       prompt: {
         id: chatId,
         content: {
-          text: await textFormat(message),
-          files: await imageFormat(files),
+          text: message,
+          files: await base64(files),
         },
       },
     }),
   });
+  // Capture the streaming response
   const reader = response?.body?.getReader();
   const decoder = new TextDecoder();
   while (true) {

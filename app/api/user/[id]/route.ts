@@ -1,6 +1,7 @@
 import { getUserConversations } from "@/lib/db/models/conversations";
 import { NextRequest, NextResponse } from "next/server";
 
+// This route will return every conversations for a specific user
 export async function GET(
 	request: NextRequest,
 	{ params }: { params: Promise<{ id: string }> }

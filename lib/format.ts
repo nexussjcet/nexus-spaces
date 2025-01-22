@@ -1,13 +1,11 @@
-export const imageFormat = async (fileList: File[]): Promise<{type: "image", image: string}[]> => {
-    const files: {type: "image", image: string}[] = [];
+// This function will take in an array of File objects and convert them to base64 strings (for LLM compatibility)
+export const base64 = async (fileList: File[]): Promise<string[]> => {
+    const files: string[] = [];
     for await (const file of fileList) {
         const promise = new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.onload = () => {
-                resolve({
-                    type: "image",
-                    image: reader.result?.toString().split(",")[1],
-                });
+                resolve(reader.result?.toString().split(",")[1]);
             };
             reader.onerror = reject;
             reader.readAsDataURL(file);
@@ -16,12 +14,3 @@ export const imageFormat = async (fileList: File[]): Promise<{type: "image", ima
     };
     return files;
 };
-
-export const textFormat = async (message: string): Promise<{type: "text", text: string}[]> => {
-    const text: { type: "text", text: string}[] = [];
-    text.push({
-        type: "text",
-        text: message
-    });
-    return text;
-}
