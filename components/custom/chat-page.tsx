@@ -3,7 +3,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { ChatSidebar } from "@/components/custom/chat-sidebar";
 import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
-import { Send } from "lucide-react";
+import { Send, File } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import Markdown from "react-markdown";
 import type { Message, Conversation } from "@/types";
@@ -67,6 +67,8 @@ export function ChatPage({ user }: Props) {
     const userMessage = { id: chatId, content: { text: message, files: files }, isUser: true };
     updateConversation(userMessage);
     const response = sendMessage(selectedConversation, chatId, message, files);
+    setMessage("");
+    setFiles([]);
     let responseText = "";
     for await (const chunk of response) {
       responseText += chunk.data;
@@ -77,7 +79,6 @@ export function ChatPage({ user }: Props) {
       fetchAllConversation();
       setUpdated(true);
     }
-    setMessage("");
   };
 
   const handleNewChat = async () => {
@@ -130,10 +131,19 @@ export function ChatPage({ user }: Props) {
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeyDown}
           />
-          <Button className="w-fit ml-auto" onClick={handleSubmit}>
-            <Send />
-            Send
-          </Button>
+          <div className="flex flex-row">
+            <Input
+              type="file"
+              className="w-[50%]"
+              onChange={(e) => setFiles((prev) => [...prev, ...(e.target?.files || [])])}
+              multiple
+            >
+            </Input>
+            <Button className="w-fit ml-auto" onClick={handleSubmit}>
+              <Send />
+              Send
+            </Button>
+          </div>
         </div>
       </div>
     </SidebarProvider>

@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createConversation, deleteConversation, getConversation, addMessage } from "@/lib/db/models/conversations";
 import { streamAIResponse } from "@/lib/agent";
-import { CoreMessage } from "ai";
 
 export async function GET(
   request: Request,
@@ -44,11 +43,11 @@ export async function POST(
     deleteConversation(convId);
     return NextResponse.json({ success: true, message: "Conversation deleted" });
   } else if (action === "ai") {
-    const { prompt } = await request.json(); // Need to add files here
-    addMessage(id, prompt);
-    const message = { role: "user", content: [{ type: "text", text: prompt.content.text }] } as CoreMessage;
+    const { prompt } = await request.json();
+    const dbFormat = { id: prompt.id, content: { text: prompt.content.text, files: prompt.content.files }, isUser: true };
+    addMessage(id, dbFormat);
     const chatId = `assitant-${Date.now().toString()}`;
-    const aiResponse = streamAIResponse(id, chatId, message);
+    const aiResponse = streamAIResponse(id, chatId, prompt);
     const stream = new ReadableStream({
       async start(controller) {
         try {
@@ -57,7 +56,9 @@ export async function POST(
             if (chunk.type === "text-delta") {
               const jsonData = { success: true, id: chatId, data: chunk.textDelta };
               response = JSON.stringify(jsonData) + "{%%}";
-            }// }else {
+            }
+            // Handle other types of responses
+            // }else {
             //   const jsonData = {success: false, id: chatId, data: "Error Occurred"};
             //   response = JSON.stringify(jsonData) + "{%%}";
             // }

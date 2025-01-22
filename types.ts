@@ -1,7 +1,7 @@
 export interface Message {
   id: string;
   content: { text?: string, files?: File[] };
-  isUser: boolean;
+  isUser?: boolean;
   isError?: boolean;
 }
 
