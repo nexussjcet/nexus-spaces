@@ -12,9 +12,3 @@ export interface Conversation { // Conversation format stored in the database
   messages: Message[];
   userId: string;
 }
-
-export interface Prompt { 
-  id: string;
-  content: { text: string, files: File[] };
-  isUser: boolean;
-}

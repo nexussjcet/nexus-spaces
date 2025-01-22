@@ -27,7 +27,8 @@ export async function POST(
 ) {
   const id = (await params).id;
   const action = request.nextUrl.searchParams.get("action");
-  if (action === "create") { // Creates new conversation
+  if (action === "create") {
+    // Creates new conversation
     const { convId, convTitle, convTimestamp, userId } = await request.json();
     const data = {
       id: convId,
@@ -38,11 +39,13 @@ export async function POST(
     };
     createConversation(data);
     return NextResponse.json({ success: true, message: "Conversation created", data });
-  } else if (action === "delete") { // Delete a conversation
+  } else if (action === "delete") {
+    // Delete a conversation
     const { convId } = await request.json();
     deleteConversation(convId);
     return NextResponse.json({ success: true, message: "Conversation deleted" });
-  } else if (action === "ai") { // Call AI model
+  } else if (action === "ai") {
+    // Call AI model
     const { prompt } = await request.json();
     let dbFormat;
     if (prompt.content.files && prompt.content.files.length > 0)
