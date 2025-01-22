@@ -44,7 +44,11 @@ export async function POST(
     return NextResponse.json({ success: true, message: "Conversation deleted" });
   } else if (action === "ai") {
     const { prompt } = await request.json();
-    const dbFormat = { id: prompt.id, content: { text: prompt.content.text, files: prompt.content.files }, isUser: true };
+    let dbFormat;
+    if (prompt.content.files.length > 0)
+      dbFormat = { id: prompt.id, content: [ ...prompt.content.text, ...prompt.content.files ], isUser: true };
+    else
+      dbFormat = { id: prompt.id, content: [ ...prompt.content.text ], isUser: true };
     addMessage(id, dbFormat);
     const chatId = `assitant-${Date.now().toString()}`;
     const aiResponse = streamAIResponse(id, chatId, prompt);

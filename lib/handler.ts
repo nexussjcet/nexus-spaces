@@ -1,4 +1,5 @@
 import { v4 as uuid4 } from 'uuid';
+import { imageFormat, textFormat } from './format';
 
 export const initConversation = async (user: { id: string }) => {
   const convId = uuid4();
@@ -34,8 +35,8 @@ export async function* sendMessage(convId: string, chatId: string, message: stri
       prompt: {
         id: chatId,
         content: {
-          text: message,
-          files: files,
+          text: await textFormat(message),
+          files: await imageFormat(files),
         },
       },
     }),

@@ -25,7 +25,7 @@ export async function generateTitle(message: CoreMessage) {
 export async function* streamAIResponse(
   convId: string,
   chatId: string,
-  prompt: Message,
+  prompt: any,
 ) {
   const system = `
     You are a helpful AI agent called Spacey. You are part of a social media website called Nexus Spaces, developed by students of SJCET palai. Nexus Spaces is an AI driven social media website, where users can discover other users or posts by prompting you.
@@ -41,17 +41,12 @@ export async function* streamAIResponse(
   // }
   await prevMessages.messages.map(async (item) => {
     if (item.isUser) {
-      if (item.content.files) {
-        messages.push({ role: "user", content: [...await textFormat(item.content.text!), ...await imageFormat(item.content.files!)] } as CoreMessage);
-      }else{
-        messages.push({ role: "user", content: [...await textFormat(item.content.text!)] } as CoreMessage);
-      }
+        messages.push({ role: "user", content: [...item.content] } as CoreMessage);
     } else {
-      messages.push({ role: "assistant", content: [...await textFormat(item.content.text!), ...await imageFormat(item.content.files!)] } as CoreMessage);
+      messages.push({ role: "assistant", content: [...item.content] } as CoreMessage);
     }
   });
-  const message = { role: "user", content: [...await textFormat(prompt.content.text!), ...await imageFormat(prompt.content.files!)] } as CoreMessage;
-  console.log("mess", message);
+  const message = { role: "user", content: [...prompt.content.text, ...prompt.content.files] } as CoreMessage;
   messages.push(message);
   const aiResponse = streamText({
     model,
@@ -60,9 +55,7 @@ export async function* streamAIResponse(
     onFinish: async (event) => {
       await addMessage(convId, {
         id: chatId,
-        content: {
-          text: event.text
-        },
+        content: [ ...await textFormat(event.text)],
         isUser: false,
       });
     },

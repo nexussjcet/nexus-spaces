@@ -1,6 +1,6 @@
 export interface Message {
   id: string;
-  content: { text?: string, files?: File[] };
+  content: ({ type: "text", text: string } | { type: "image", image: string})[];
   isUser?: boolean;
   isError?: boolean;
 }
