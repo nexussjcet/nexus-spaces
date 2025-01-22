@@ -6,8 +6,9 @@ import { Button } from "../ui/button";
 import { Send, File } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import Markdown from "react-markdown";
-import type { Message, Conversation, Prompt } from "@/types";
+import type { Message, Conversation } from "@/types";
 import { fetchConversations, initConversation, sendMessage } from "@/lib/handler";
+import { base64 } from "@/lib/format";
 
 interface Props {
   user: {
@@ -43,8 +44,8 @@ export function ChatPage({ user }: Props) {
     handleSendMessage();
   };
 
-  const updateConversation = (newMessage: Prompt) => {
-    // @ts-ignore
+  // Update messages on client
+  const updateConversation = (newMessage: Message) => {
     setConversation((prev) => {
       if (prev && prev.messages) {
         const messageExists = prev.messages.some((msg) => msg.id === newMessage.id);
@@ -63,9 +64,10 @@ export function ChatPage({ user }: Props) {
     });
   };
 
+  // Handle send event 
   const handleSendMessage = async () => {
     const chatId = `user-${Date.now().toString()}`;
-    const userMessage: Prompt = { id: chatId, content: { text: message, files: files }, isUser: true };
+    const userMessage: Message = { id: chatId, content: { text: message, files: await base64(files) }, isUser: true };
     updateConversation(userMessage);
     const response = sendMessage(selectedConversation, chatId, message, files);
     setMessage("");
@@ -73,7 +75,7 @@ export function ChatPage({ user }: Props) {
     let responseText = "";
     for await (const chunk of response) {
       responseText += chunk.data;
-      const assitantMessage: Prompt = { id: chunk.id, content: { text: responseText, files: [] }, isUser: false };
+      const assitantMessage: Message = { id: chunk.id, content: { text: responseText }, isUser: false };
       updateConversation(assitantMessage);
     }
     if (!updated) {

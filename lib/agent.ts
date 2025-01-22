@@ -16,13 +16,14 @@ const groq = createGroq({
   apiKey: process.env.GROQ_API_KEY,
 });
 
-const model = groq("llama-3.2-90b-vision-preview");
 
 export async function generateTitle(message: CoreMessage) {
+const model = groq("llama-3.3-70b-versatile");
+
   const { text } = await generateText({
     model,
     system: `
-        Generate a short title consisting of at most 3 words from the given prompt.
+        Generate a short title consisting of at most 5 words from the given prompt.
         `,
     messages: [message],
   });
@@ -35,6 +36,7 @@ export async function* streamAIResponse(
   chatId: string,
   prompt: any,
 ) {
+  const model = groq("llama-3.2-90b-vision-preview");
   const system = `
     You are a helpful AI agent called Spacey. You are part of a social media website called Nexus Spaces, developed by students of SJCET palai. Nexus Spaces is an AI driven social media website, where users can discover other users or posts by prompting you.
 
@@ -42,11 +44,7 @@ export async function* streamAIResponse(
     1. Generate short and to the point responses.
     2. Answer questions directly and in a way that is easy to understand.
     `;
-  // Generate title (Need a separate model)
-  // if (prevMessages.messages.length < 2) {
-  //   await updateTitle(convId, await generateTitle(message));
-  // }
-
+  
   const messages: CoreMessage[] = [];
 
   // Pass previous messages to model
@@ -103,6 +101,11 @@ export async function* streamAIResponse(
       });
     },
   });
+
+  // Generates a title
+  if (prevMessages.messages.length < 2) {
+    await updateTitle(convId, await generateTitle(message));
+  }
   for await (const chunk of aiResponse.fullStream) {
     yield chunk;
   }
