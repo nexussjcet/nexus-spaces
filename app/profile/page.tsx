@@ -49,6 +49,7 @@ export default async function Profile() {
         <h2 className="text-md md:text-xl font-bold">Nexus Spaces</h2>
         <div className="ml-auto flex flex-row gap-6 items-center">
           <Link href="/">Home</Link>
+          <Link href="/post">Post</Link>
           <SignOutButton />
         </div>
       </nav>
@@ -77,7 +78,7 @@ export default async function Profile() {
                   required
                 />
               </form>
-              <Button type="submit" className="font-semibold mt-2">
+              <Button type="submit" className="mt-2">
                 Update Bio
               </Button>
             </div>
