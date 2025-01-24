@@ -196,7 +196,7 @@ const PostCreator = () => {
               value={youtubeInput}
               onChange={(e) => setYoutubeInput(e.target.value)}
               placeholder="Paste YouTube URL"
-              className="flex-1 px-3 py-2 rounded-lg border border-neutral-300 bg-neutral-50"
+              className="flex-1 px-3 py-2 border border-neutral-300 bg-transparent"
             />
             <Button onClick={handleYoutubeAdd}>Add</Button>
           </div>
