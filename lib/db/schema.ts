@@ -5,8 +5,33 @@ import {
   text,
   primaryKey,
   integer,
+  jsonb,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccountType } from "next-auth/adapters";
+
+export type Media = {
+  type: "image" | "youtube";
+  url: string;
+};
+
+export type PostContent = {
+  blocks: any[];
+  time: number;
+  version: string;
+};
+
+export const posts = pgTable("posts", {
+  id: text()
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  content: jsonb("content").$type<PostContent>().notNull(),
+  media: jsonb("media").$type<Media[]>().default([]),
+  userId: text()
+    .notNull()
+    .references(() => users.id),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
 
 export const users = pgTable("user", {
   id: text("id")
