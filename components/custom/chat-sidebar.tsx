@@ -7,20 +7,18 @@ import {
   SidebarFooter,
   SidebarHeader,
 } from "@/components/ui/sidebar";
-import { PenBoxIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
-import { Conversation } from "@/types";
+import { ConversationMetadata } from "@/types";
 
 interface Props {
-  conversations: Conversation[];
-  setConversations: React.Dispatch<React.SetStateAction<Conversation[]>>;
+  conversationList: ConversationMetadata[];
   selectedConversations: string;
   setSelectedConversation: React.Dispatch<React.SetStateAction<string>>;
   handleNewChat: () => Promise<void>;
 }
 
-export function ChatSidebar({ conversations, selectedConversations, setSelectedConversation, handleNewChat }: Props) {
+export function ChatSidebar({ conversationList, selectedConversations, setSelectedConversation, handleNewChat }: Props) {
 
   return (
     <Sidebar className="bg-black">
@@ -34,7 +32,7 @@ export function ChatSidebar({ conversations, selectedConversations, setSelectedC
         </Link>
       </SidebarHeader>
       <SidebarContent>
-        {conversations.map((conv) => (
+        {conversationList.map((conv) => (
           <div
             key={conv.id}
             className={cn(
