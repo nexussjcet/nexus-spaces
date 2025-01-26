@@ -3,7 +3,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { ChatSidebar } from "@/components/custom/chat-sidebar";
 import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
-import { Send } from "lucide-react";
+import { Send, File } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import Markdown from "react-markdown";
 import type { Message, Conversation, ConversationMetadata } from "@/types";
