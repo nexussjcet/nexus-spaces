@@ -3,9 +3,11 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { ChatSidebar } from "@/components/custom/chat-sidebar";
 import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
-import { Send, File } from "lucide-react";
+import { Send, File, Code } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import Markdown from "react-markdown";
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import type { Message, Conversation, ConversationMetadata } from "@/types";
 import { initConversation, fetchConversation, fetchAllConversation, sendMessage } from "@/lib/handler";
 import { base64 } from "@/lib/format";
@@ -25,7 +27,6 @@ export function ChatPage({ user }: Props) {
   const [selectedConversation, setSelectedConversation] = useState<string>("");
   const [updated, setUpdated] = useState(false);
 
-  // Update conversation metadata on client
   const updateConversationList = async () => {
     const res = await (await fetchAllConversation(user.id)).json();
     if (res.success) {
@@ -127,6 +128,52 @@ export function ChatPage({ user }: Props) {
     });
   }, [selectedConversation]);
 
+  const CustomMarkdownRenderer = React.memo(({ children }: { children:  React.ReactNode }) => {
+    const markdownContent = typeof children === 'string' 
+    ? children 
+    : React.Children.map(children, child => 
+        typeof child === 'string' ? child : ''
+      )?.join('') || '';
+    return (
+      <Markdown
+        components={{
+          code(props) {
+            const { children, className, ...rest } = props;
+            const match = /language-(\w+)/.exec(className || '');
+            return match ? (
+              <div className="relative">
+                <SyntaxHighlighter
+                  style={oneDark}
+                  language={match[1]}
+                  PreTag="div"
+                  className="rounded-lg overflow-hidden"
+                >
+                  {String(children).replace(/\n$/, '')}
+                </SyntaxHighlighter>
+                <Button 
+                  size="sm" 
+                  variant="outline" 
+                  className="absolute top-2 right-2 opacity-90 hover:opacity-100"
+                  onClick={() => {
+                    navigator.clipboard.writeText(String(children));
+                  }}
+                >
+                  <Code className="h-4 w-4 mr-1" /> Copy
+                </Button>
+              </div>
+            ) : (
+              <code {...rest} className={`${className} bg-neutral-800 p-1 rounded`}>
+                {children}
+              </code>
+            );
+          },
+        }}
+      >
+        {markdownContent}
+      </Markdown>
+    );
+  });
+
   return (
     <SidebarProvider>
       <ChatSidebar
@@ -160,7 +207,7 @@ export function ChatPage({ user }: Props) {
                     {chatMessage.isUser ? "You" : "Spacey"}
                   </h3>
                   <div className={`${chatMessage.isUser ? 'bg-blue-600 rounded-xl px-4 py-2' : ''}`}>
-                    <Markdown>{chatMessage.content.text}</Markdown>
+                    <CustomMarkdownRenderer>{chatMessage.content.text}</CustomMarkdownRenderer>
                   </div>
                 </div>
               </div>
