@@ -195,7 +195,7 @@ export function ChatPage({ user }: Props) {
             <Input
               id="file-upload"
               type="file"
-              className="w-[50%]"
+              className="hidden"
               onChange={(e) => setFiles(e.target?.files ? Array.from(e.target.files) : [])}
               multiple
             />
