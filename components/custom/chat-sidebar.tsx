@@ -49,7 +49,7 @@ export function ChatSidebar({ conversations, selectedConversations, setSelectedC
       </SidebarContent>
       <SidebarFooter>
         <Button
-          className="mb-3"
+          className="mb-3 rounded-xl"
           onClick={handleNewChat}
         >
           New Chat
