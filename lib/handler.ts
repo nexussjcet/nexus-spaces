@@ -17,7 +17,11 @@ export const initConversation = async (user: { id: string }) => {
   });
 };
 
-export const fetchConversations = async (userId: string) => {
+export const fetchConversation = async (convId: string) => {
+  return await fetch(`/api/chat/${convId}`);
+}
+
+export const fetchAllConversation = async (userId: string) => {
   return await fetch(`/api/user/${userId}?action=get-conversations`);
 }
 

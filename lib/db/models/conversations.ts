@@ -35,5 +35,10 @@ export async function updateTitle(convId: string, title: string) {
 };
 
 export async function getUserConversations(userId: string) {
-  return await db.select().from(conversations).where(eq(conversations.userId, userId));
+  return await db.select({
+    id: conversations.id,
+    title: conversations.title,
+    timestamp: conversations.timestamp,
+    userId: conversations.userId,
+  }).from(conversations).where(eq(conversations.userId, userId));
 }

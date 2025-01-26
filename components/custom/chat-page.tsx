@@ -3,11 +3,11 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { ChatSidebar } from "@/components/custom/chat-sidebar";
 import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
-import { Send, File } from "lucide-react";
+import { Send } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import Markdown from "react-markdown";
-import type { Message, Conversation } from "@/types";
-import { fetchConversations, initConversation, sendMessage } from "@/lib/handler";
+import type { Message, Conversation, ConversationMetadata } from "@/types";
+import { initConversation, fetchConversation, fetchAllConversation, sendMessage } from "@/lib/handler";
 import { base64 } from "@/lib/format";
 
 interface Props {
@@ -20,31 +20,21 @@ export function ChatPage({ user }: Props) {
   const [message, setMessage] = useState("");
   const [files, setFiles] = useState<File[]>([]);
   const [conversation, setConversation] = useState<Conversation>();
-  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [conversationList, setConversationList] = useState<ConversationMetadata[]>([]);
   const [selectedConversation, setSelectedConversation] = useState<string>("");
   const [updated, setUpdated] = useState(false);
 
-  const fetchAllConversation = async () => {
-    const res = await (await fetchConversations(user.id)).json();
+  // Update conversation metadata on client
+  const updateConversationList = async () => {
+    const res = await (await fetchAllConversation(user.id)).json();
     if (res.success) {
-      setConversations(res.data);
+      setConversationList(res.data);
     } else {
       throw new Error("Failed to fetch conversations");
     }
   };
 
-  const handleKeyDown = async (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSendMessage();
-    }
-  };
-
-  const handleSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
-    handleSendMessage();
-  };
-
-  // Update messages on client
+  // Update conversation messages on client
   const updateConversation = (newMessage: Message) => {
     setConversation((prev) => {
       if (prev && prev.messages) {
@@ -64,6 +54,17 @@ export function ChatPage({ user }: Props) {
     });
   };
 
+  const handleKeyDown = async (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
+
+  const handleSubmit = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    handleSendMessage();
+  };
+
   // Handle send event 
   const handleSendMessage = async () => {
     const chatId = `user-${Date.now().toString()}`;
@@ -79,7 +80,7 @@ export function ChatPage({ user }: Props) {
       updateConversation(assitantMessage);
     }
     if (!updated) {
-      fetchAllConversation();
+      updateConversationList();
       setUpdated(true);
     }
   };
@@ -87,23 +88,29 @@ export function ChatPage({ user }: Props) {
   const handleNewChat = async () => {
     const res = await (await initConversation(user)).json();
     setSelectedConversation(res.data.id);
-    fetchAllConversation();
+    updateConversationList();
     setUpdated(false);
   };
 
   useEffect(() => {
-    fetchAllConversation();
+    updateConversationList();
   }, []);
 
   useEffect(() => {
-    setConversation(conversations.find((conv) => conv.id === selectedConversation));
+    conversationList.forEach(async (conv) => {
+      if (conv.id === selectedConversation) {
+        const res = await (await fetchConversation(conv.id)).json();
+        if (res.success) {
+          setConversation(res.data);
+        }
+      }
+    });
   }, [selectedConversation]);
 
   return (
     <SidebarProvider>
       <ChatSidebar
-        conversations={conversations}
-        setConversations={setConversations}
+        conversationList={conversationList}
         selectedConversations={selectedConversation}
         setSelectedConversation={setSelectedConversation}
         handleNewChat={handleNewChat}
@@ -138,7 +145,7 @@ export function ChatPage({ user }: Props) {
             <Input
               type="file"
               className="w-[50%]"
-              onChange={(e) => setFiles((prev) => [...prev, ...(e.target?.files || [])])}
+              onChange={(e) => setFiles(e.target?.files ? Array.from(e.target.files) : [])}
               multiple
             >
             </Input>
