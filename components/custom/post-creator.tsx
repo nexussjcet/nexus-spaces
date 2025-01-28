@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
-import dynamic from "next/dynamic";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { createPost } from "@/lib/handler";
 import { X, Youtube } from "lucide-react";
+import dynamic from "next/dynamic";
+import React, { useEffect, useRef, useState } from "react";
 
 const EditorJS = dynamic(() => import("@editorjs/editorjs"), { ssr: false });
 const Header = dynamic(() => import("@editorjs/header"), { ssr: false });
@@ -168,11 +169,21 @@ const PostCreator = () => {
         }
 
         const finalPost = {
-          ...post,
           content: savedData,
+          media: post.media || [],
         };
 
-        console.log("Creating post:", finalPost);
+        const response = await createPost(finalPost);
+
+        if (response.ok) {
+          const result = await response.json();
+          alert("Post created successfully!");
+          console.log(result.post);
+          setPost({});
+          editorRef.current.clear();
+        } else {
+          alert("Failed to create post");
+        }
       } catch (error) {
         console.error("Save failed", error);
       }
