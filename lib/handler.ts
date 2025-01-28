@@ -1,5 +1,47 @@
-import { v4 as uuid4 } from 'uuid';
-import { base64 } from './format';
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
+import { v4 as uuid4 } from "uuid";
+import { getUser } from "./db/models/users";
+import { base64 } from "./format";
+
+export const createPost = async (post: { content: any; media?: any[] }) => {
+  const postId = uuid4();
+  const userId = getCurrentUserId();
+
+  const response = await fetch(`/api/post/${postId}?action=create`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      content: post.content,
+      media: post.media || [],
+      timestamp: new Date().toISOString(),
+      userId,
+    }),
+  });
+
+  if (!response.ok) {
+    const errorBody = await response.json();
+    throw new Error(
+      `Failed to create post: ${errorBody.message || response.statusText}`,
+    );
+  }
+
+  return response;
+};
+
+async function getCurrentUserId() {
+  const session = await auth();
+  let user: any;
+
+  if (!session) {
+    redirect("/signin");
+  } else {
+    user = await getUser(session.user?.id!);
+  }
+  return user.id;
+}
 
 export const initConversation = async (user: { id: string }) => {
   const convId = uuid4();
@@ -19,9 +61,14 @@ export const initConversation = async (user: { id: string }) => {
 
 export const fetchConversations = async (userId: string) => {
   return await fetch(`/api/user/${userId}?action=get-conversations`);
-}
+};
 
-export async function* sendMessage(convId: string, chatId: string, message: string, files: File[]) {
+export async function* sendMessage(
+  convId: string,
+  chatId: string,
+  message: string,
+  files: File[],
+) {
   const response = await fetch(`/api/chat/${convId}?action=ai`, {
     method: "POST",
     headers: {
@@ -51,8 +98,8 @@ export async function* sendMessage(convId: string, chatId: string, message: stri
         } catch (error) {
           // console.log("Error parsing chunk:", error);
         }
-      };
+      }
     }
     if (done) break;
   }
-};
+}
