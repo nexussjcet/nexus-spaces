@@ -1,27 +1,29 @@
 "use client";
-import Image from "next/image";
-import Link from "next/link";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
 } from "@/components/ui/sidebar";
-import { PenBoxIcon } from "lucide-react";
-import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
-import { Conversation } from "@/types";
+import { ConversationMetadata } from "@/types";
+import Image from "next/image";
+import Link from "next/link";
+import { Button } from "../ui/button";
 
 interface Props {
-  conversations: Conversation[];
-  setConversations: React.Dispatch<React.SetStateAction<Conversation[]>>;
+  conversationList: ConversationMetadata[];
   selectedConversations: string;
   setSelectedConversation: React.Dispatch<React.SetStateAction<string>>;
   handleNewChat: () => Promise<void>;
 }
 
-export function ChatSidebar({ conversations, selectedConversations, setSelectedConversation, handleNewChat }: Props) {
-
+export function ChatSidebar({
+  conversationList,
+  selectedConversations,
+  setSelectedConversation,
+  handleNewChat,
+}: Props) {
   return (
     <Sidebar className="bg-black">
       <SidebarHeader>
@@ -34,7 +36,7 @@ export function ChatSidebar({ conversations, selectedConversations, setSelectedC
         </Link>
       </SidebarHeader>
       <SidebarContent>
-        {conversations.map((conv) => (
+        {conversationList.map((conv) => (
           <div
             key={conv.id}
             className={cn(
@@ -48,10 +50,7 @@ export function ChatSidebar({ conversations, selectedConversations, setSelectedC
         ))}
       </SidebarContent>
       <SidebarFooter>
-        <Button
-          className="mb-3"
-          onClick={handleNewChat}
-        >
+        <Button className="mb-3 rounded-xl" onClick={handleNewChat}>
           New Chat
         </Button>
       </SidebarFooter>
