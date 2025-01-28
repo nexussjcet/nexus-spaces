@@ -52,20 +52,28 @@ export default async function Profile() {
           <SignOutButton />
         </div>
       </nav>
-      <div className="flex  justify-center   w-full h-full ">
-        <div className="flex portrait:flex-wrap  portrait:justify-center justify-around   items-center  xl:w-[1500px] md:w-[1200px]   portrait:h-full">
-          <div className="flex flex-col items-center  portrait:w-full  portrait:mb-7 portrait:mt-5 portrait:p-5 md:border border-white p-10">
+      <div className="flex justify-center w-full h-full">
+        <div className="flex portrait:flex-wrap portrait:justify-center justify-around items-start xl:w-[1500px] md:w-[1200px] portrait:h-full gap-8 p-6">
+          <div className="flex flex-col items-center portrait:w-full portrait:mb-7 portrait:mt-5 portrait:p-5 md:border border-neutral-800 p-10 rounded-xl">
             <Avatar className="w-20 h-20 mb-5">
               <AvatarImage src={user.image!} />
               <AvatarFallback>
                 {user.name?.slice(0, 2).toUpperCase()}
               </AvatarFallback>
             </Avatar>
-            <div className="flex flex-col gap-2  w-full">
+            <div className="flex flex-col gap-2 w-full">
               <label className="text-sm mt-2">Name</label>
-              <Input value={user.name!} disabled />
+              <Input 
+                value={user.name!} 
+                disabled 
+                className="rounded-xl bg-neutral-900 border-neutral-800"
+              />
               <label className="text-sm mt-2">Email</label>
-              <Input value={user.email!} disabled />
+              <Input 
+                value={user.email!} 
+                disabled 
+                className="rounded-xl bg-neutral-900 border-neutral-800"
+              />
               <form action={updateBio} className="flex flex-col gap-2">
                 <label className="text-sm mt-2">Bio</label>
                 <Input type="hidden" name="id" value={user.id} />
@@ -75,41 +83,45 @@ export default async function Profile() {
                   placeholder="Tell us something about yourself"
                   rows={4}
                   required
+                  className="rounded-xl bg-neutral-900 border-neutral-800 resize-none"
                 />
               </form>
-              <Button type="submit" className="font-semibold mt-2">
+              <Button 
+                type="submit" 
+                className="font-semibold mt-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white"
+              >
                 Update Bio
               </Button>
             </div>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-4 p-4">
+          <div className="grid md:grid-cols-2 gap-6 p-4 w-full max-w-[800px]">
             {repositories.length > 0 ? (
               repositories.map((repo: any, index: number) => (
-                <div key={index} className="group block">
-                  <div className="border p-4 transition-all hover:bg-accent">
-                    <div className="flex items-center justify-between">
+                <div key={index} className="group">
+                  <div className="border border-neutral-800 rounded-xl p-6 transition-all hover:bg-neutral-900">
+                    <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-2">
-                        <GitBranchIcon className="h-5 w-5 text-muted-foreground" />
-                        <h3 className="font-semibold group-hover:text-primary">
+                        <GitBranchIcon className="h-5 w-5 text-neutral-400" />
+                        <h3 className="font-semibold group-hover:text-white transition-colors">
                           {repo.name}
                         </h3>
                       </div>
                       {repo.languages?.[0] && (
-                        <Badge variant="secondary">
+                        <Badge variant="secondary" className="bg-neutral-800 text-neutral-200">
                           {repo.languages[0].name}
                         </Badge>
                       )}
                     </div>
-                    <p className="mt-2 text-sm text-muted-foreground line-clamp-2">
+                    <p className="mt-2 text-sm text-neutral-400 line-clamp-2 min-h-[40px]">
                       {repo.description || "No description available"}
                     </p>
-                    <div className="mt-3 flex items-center gap-4">
-                      <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                    <div className="mt-4 flex items-center gap-6">
+                      <div className="flex items-center gap-2 text-sm text-neutral-400">
                         <StarIcon className="h-4 w-4" />
                         <span>{repo.stars?.toLocaleString() ?? 0}</span>
                       </div>
-                      <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                      <div className="flex items-center gap-2 text-sm text-neutral-400">
                         <GitForkIcon className="h-4 w-4" />
                         <span>{repo.forks?.toLocaleString() ?? 0}</span>
                       </div>
@@ -118,7 +130,9 @@ export default async function Profile() {
                 </div>
               ))
             ) : (
-              <p className="text-muted-foreground">No repositories found.</p>
+              <p className="text-neutral-400 col-span-2 text-center p-4">
+                No repositories found.
+              </p>
             )}
           </div>
         </div>
