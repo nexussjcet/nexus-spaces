@@ -148,7 +148,7 @@ export function ChatPage({ user }: Props) {
                   <Button
                     size="sm"
                     variant="outline"
-                    className="opacity-100 hover:opacity-100 transition-all duration-200"
+                    className="opacity-100 text-black hover:opacity-100 transition-all duration-200"
                     style={{ opacity: 1 }} 
                     onClick={(e) => {
                       e.preventDefault();
