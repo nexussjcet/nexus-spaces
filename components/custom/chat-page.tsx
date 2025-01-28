@@ -141,7 +141,7 @@ export function ChatPage({ user }: Props) {
             const match = /language-(\w+)/.exec(className || '');
             return match ? (
               <div className="relative group md:w-full w-[80vw] overflow-x-auto">
-                <div className="flex justify-between items-center w-[80vw] md:mw-screen bg-neutral-800 px-3 py-1 rounded-t-lg">
+                <div className="flex justify-between items-center w-[80vw] md:w-full bg-neutral-800 px-3 py-1 rounded-t-lg">
                   <span className="text-sm text-neutral-400">
                     {match[1]}
                   </span>
@@ -167,7 +167,7 @@ export function ChatPage({ user }: Props) {
                   style={oneDark}
                   language={match[1]}
                   PreTag="div"
-                  className="!mt-0 !rounded-t-none overflow-x-hidden w-[80vw] md:mw-screen"
+                  className="!mt-0 !rounded-t-none w-[80vw] md:w-full"
                 >
                   {String(children).replace(/\n$/, '')}
                 </SyntaxHighlighter>
