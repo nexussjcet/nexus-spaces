@@ -70,18 +70,17 @@ export async function POST(
             }
             controller.enqueue(new TextEncoder().encode(response));
           }
+          // Add assistant messages to db
+          await addMessage(id, {
+            id: chatId,
+            content: { text: data },
+            isUser: false,
+          });
           controller.close();
         } catch (error) {
           controller.error(error);
         }
       },
-    });
-
-    // Add assistant messages to db
-    await addMessage(id, {
-      id: chatId,
-      content: { text: data },
-      isUser: false,
     });
     return new Response(stream, {
       headers: { "Content-Type": "application/json", "Transfer-Encoding": "chunked" },
