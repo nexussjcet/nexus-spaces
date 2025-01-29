@@ -14,7 +14,7 @@ export async function GET(
       message: "Conversation found",
       data,
     });
-  }else{
+  } else {
     return NextResponse.json({ success: false, message: "Conversation not found" });
   }
 }
@@ -54,7 +54,8 @@ export async function POST(
       dbFormat = { id: prompt.id, content: { text: prompt.content.text }, isUser: true };
     addMessage(id, dbFormat); // Add user message to db
     const chatId = `assitant-${Date.now().toString()}`;
-    const aiResponse = streamAIResponse(id, chatId, prompt);
+    const aiResponse = streamAIResponse(id, prompt);
+    let data = "";
 
     // Create a new ReadableStream to handle the streaming response
     const stream = new ReadableStream({
@@ -62,9 +63,10 @@ export async function POST(
         try {
           for await (const chunk of aiResponse) {
             let response;
-            if (chunk.type === "text-delta") {
-              const jsonData = { success: true, id: chatId, data: chunk.textDelta };
+            if (chunk.type === "text") {
+              const jsonData = { success: true, id: chatId, data: chunk.text };
               response = JSON.stringify(jsonData) + "{%%}"; // {%%} is a delimiter that indicates the end of the response
+              data += chunk.text;
             }
             controller.enqueue(new TextEncoder().encode(response));
           }
@@ -73,6 +75,13 @@ export async function POST(
           controller.error(error);
         }
       },
+    });
+
+    // Add assistant messages to db
+    await addMessage(id, {
+      id: chatId,
+      content: { text: data },
+      isUser: false,
     });
     return new Response(stream, {
       headers: { "Content-Type": "application/json", "Transfer-Encoding": "chunked" },

@@ -5,7 +5,7 @@ export const base64 = async (fileList: File[]): Promise<string[]> => {
         const promise = new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.onload = () => {
-                resolve(reader.result?.toString().split(",")[1]);
+                resolve(reader.result?.toString());
             };
             reader.onerror = reject;
             reader.readAsDataURL(file);
