@@ -3,9 +3,11 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { ChatSidebar } from "@/components/custom/chat-sidebar";
 import React, { useEffect, useState } from "react";
 import { Button } from "../ui/button";
-import { Send, File } from "lucide-react";
+import { Send, File, Code, Copy } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import Markdown from "react-markdown";
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import type { Message, Conversation, ConversationMetadata } from "@/types";
 import { initConversation, fetchConversation, fetchAllConversation, sendMessage } from "@/lib/handler";
 import { base64 } from "@/lib/format";
@@ -25,7 +27,6 @@ export function ChatPage({ user }: Props) {
   const [selectedConversation, setSelectedConversation] = useState<string>("");
   const [updated, setUpdated] = useState(false);
 
-  // Update conversation metadata on client
   const updateConversationList = async () => {
     const res = await (await fetchAllConversation(user.id)).json();
     if (res.success) {
@@ -35,7 +36,6 @@ export function ChatPage({ user }: Props) {
     }
   };
 
-  // Update conversation messages on client
   const updateConversation = (newMessage: Message) => {
     setConversation((prev) => {
       if (prev && prev.messages) {
@@ -66,32 +66,31 @@ export function ChatPage({ user }: Props) {
     handleSendMessage();
   };
 
-  // Handle send event 
   const handleSendMessage = async () => {
     if (!selectedConversation || !message.trim()) {
       return;
     }
 
     const chatId = `user-${Date.now().toString()}`;
-    const userMessage: Message = { 
-      id: chatId, 
-      content: { text: message, files: await base64(files) }, 
-      isUser: true 
+    const userMessage: Message = {
+      id: chatId,
+      content: { text: message, files: await base64(files) },
+      isUser: true
     };
-    
+
     updateConversation(userMessage);
     const response = sendMessage(selectedConversation, chatId, message, files);
     setMessage("");
     setFiles([]);
-    
+
     let responseText = "";
     try {
       for await (const chunk of response) {
         responseText += chunk.data;
-        const assistantMessage: Message = { 
-          id: chunk.id, 
-          content: { text: responseText }, 
-          isUser: false 
+        const assistantMessage: Message = {
+          id: chunk.id,
+          content: { text: responseText },
+          isUser: false
         };
         updateConversation(assistantMessage);
       }
@@ -127,6 +126,76 @@ export function ChatPage({ user }: Props) {
     });
   }, [selectedConversation]);
 
+  const CustomMarkdownRenderer = React.memo(({ children }: { children: React.ReactNode }) => {
+    const markdownContent = typeof children === 'string'
+      ? children
+      : React.Children.map(children, child =>
+        typeof child === 'string' ? child : ''
+      )?.join('') || '';
+
+    return (
+      <Markdown
+        components={{
+          code(props) {
+            const { children, className, ...rest } = props;
+            const match = /language-(\w+)/.exec(className || '');
+            return match ? (
+              <div className="relative group md:w-full w-[80vw] overflow-x-auto">
+                <div className="flex justify-between items-center w-[80vw] md:w-full bg-neutral-800 px-3 py-1 rounded-t-lg">
+                  <span className="text-sm text-neutral-400">
+                    {match[1]}
+                  </span>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="opacity-100 text-black hover:opacity-100 transition-all duration-200"
+                    style={{ opacity: 1 }} 
+                    onClick={(e) => {
+                      e.preventDefault();
+                      navigator.clipboard.writeText(String(children).replace(/\n$/, ''));
+                      const button = e.currentTarget;
+                      button.textContent = 'Copied!';
+                      setTimeout(() => {
+                        button.textContent = 'Copy';
+                      }, 2000);
+                    }}
+                  >
+                    Copy
+                  </Button>
+                </div>
+                <SyntaxHighlighter
+                  style={oneDark}
+                  language={match[1]}
+                  PreTag="div"
+                  className="!mt-0 !rounded-t-none w-[80vw] md:w-full"
+                >
+                  {String(children).replace(/\n$/, '')}
+                </SyntaxHighlighter>
+              </div>
+            ) : (
+              <code
+                {...rest}
+                className={`${className} bg-neutral-800 p-0 rounded text-sm break-words`}
+              >
+                {children}
+              </code>
+            );
+          },
+          pre(props) {
+            return (
+              <div className="w-full overflow-x-auto">
+                {props.children}
+              </div>
+            );
+          }
+        }}
+        className="break-words w-full"
+      >
+        {markdownContent}
+      </Markdown>
+    );
+  });
+
   return (
     <SidebarProvider>
       <ChatSidebar
@@ -146,11 +215,11 @@ export function ChatPage({ user }: Props) {
               <div className={`flex items-start gap-2 ${chatMessage.isUser ? 'flex-row-reverse' : ''}`}>
                 {!chatMessage.isUser && (
                   <div className="w-6 h-6 rounded-full overflow-hidden flex-shrink-0 mt-1">
-                    <Image 
-                      src="/nexus.webp" 
-                      width={24} 
-                      height={24} 
-                      alt="Spacey" 
+                    <Image
+                      src="/nexus.webp"
+                      width={24}
+                      height={24}
+                      alt="Spacey"
                       className="w-full h-full object-cover"
                     />
                   </div>
@@ -159,8 +228,8 @@ export function ChatPage({ user }: Props) {
                   <h3 className="font-bold text-neutral-400">
                     {chatMessage.isUser ? "You" : "Spacey"}
                   </h3>
-                  <div className={`${chatMessage.isUser ? 'bg-blue-600 rounded-xl px-4 py-2' : ''}`}>
-                    <Markdown>{chatMessage.content.text}</Markdown>
+                  <div className={`max-w-full ${chatMessage.isUser ? 'bg-blue-600 rounded-xl px-4 py-2' : ''}`}>
+                    <CustomMarkdownRenderer>{chatMessage.content.text}</CustomMarkdownRenderer>
                   </div>
                 </div>
               </div>
@@ -179,8 +248,8 @@ export function ChatPage({ user }: Props) {
               onChange={(e) => setMessage(e.target.value)}
               onKeyDown={handleKeyDown}
             />
-            <Button 
-              className="w-fit flex gap-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl" 
+            <Button
+              className="w-fit flex gap-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl"
               onClick={handleSubmit}
             >
               <Send className="h-4 w-4" />
