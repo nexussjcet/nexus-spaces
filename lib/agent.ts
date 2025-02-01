@@ -100,7 +100,11 @@ export async function* streamAIResponse(
   for await (const chunk of aiResponse) {
     if (chunk.choices && chunk.choices.length > 0) {
       const newContent = chunk.choices[0].delta.content;
-      yield { type: "text", text: newContent };
+      if (chunk.choices[0].finish_reason === "stop") {
+        yield { type: "text", text: newContent, streaming: false };
+      } else {
+        yield { type: "text", text: newContent, streaming: true }
+      }
     }
   }
 }

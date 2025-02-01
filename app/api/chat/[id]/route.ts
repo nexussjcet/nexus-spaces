@@ -64,7 +64,7 @@ export async function POST(
           for await (const chunk of aiResponse) {
             let response;
             if (chunk.type === "text") {
-              const jsonData = { success: true, id: chatId, data: chunk.text };
+              const jsonData = { success: true, id: chatId, data: chunk.text, streaming: chunk.streaming };
               response = JSON.stringify(jsonData) + "{%%}"; // {%%} is a delimiter that indicates the end of the response
               data += chunk.text;
             }

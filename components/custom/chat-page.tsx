@@ -1,7 +1,8 @@
 "use client";
+
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { ChatSidebar } from "@/components/custom/chat-sidebar";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 import { Send, File, Code, Copy } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -26,6 +27,7 @@ export function ChatPage({ user }: Props) {
   const [conversationList, setConversationList] = useState<ConversationMetadata[]>([]);
   const [selectedConversation, setSelectedConversation] = useState<string>("");
   const [updated, setUpdated] = useState(false);
+  const streaming = useRef(false);
 
   const updateConversationList = async () => {
     const res = await (await fetchAllConversation(user.id)).json();
@@ -93,6 +95,7 @@ export function ChatPage({ user }: Props) {
           isUser: false
         };
         updateConversation(assistantMessage);
+        streaming.current = chunk.streaming; // Set streaming status
       }
     } catch (error) {
       console.error('Error processing response:', error);
@@ -149,7 +152,7 @@ export function ChatPage({ user }: Props) {
                     size="sm"
                     variant="outline"
                     className="opacity-100 text-black hover:opacity-100 transition-all duration-200"
-                    style={{ opacity: 1 }} 
+                    style={{ opacity: 1 }}
                     onClick={(e) => {
                       e.preventDefault();
                       navigator.clipboard.writeText(String(children).replace(/\n$/, ''));
