@@ -32,7 +32,9 @@ export function ChatPage({ user }: Props) {
   const updateConversationList = async () => {
     const res = await (await fetchAllConversation(user.id)).json();
     if (res.success) {
-      setConversationList(res.data);
+      const convList = res.data;
+      convList.sort((a: ConversationMetadata, b: ConversationMetadata) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+      setConversationList(convList);
     } else {
       throw new Error("Failed to fetch conversations");
     }
