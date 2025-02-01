@@ -28,13 +28,16 @@ interface Props {
 }
 
 export function ChatSidebar({ conversationList, selectedConversations, setSelectedConversation, handleNewChat }: Props) {
-  const {data:session} = useSession();
+  const { data: session } = useSession();
   return (
     <Sidebar className="bg-black">
       <SidebarHeader>
-        <Image src="/nexus.webp" width={60} height={60} alt="Nexus" />
+        <Link href="/" className="w-[95%] flex flex-row items-center justify-center cursor-pointer">
+          <Image src="/nexus.webp" width={100} height={100} alt="Nexus" />
+          <h1 className="font-extrabold">NEXUS SPACES</h1>
+        </Link>
         <Button
-          className="mb-3 rounded-xl"
+          className="my-4 mx-3 rounded-xl"
           onClick={handleNewChat}
         >
           New Chat
@@ -55,9 +58,9 @@ export function ChatSidebar({ conversationList, selectedConversations, setSelect
         ))}
       </SidebarContent>
       <SidebarFooter>
-      <Link
+        <Link
           href="/profile"
-          className="pl-2 flex flex-row items-center gap-2 font-bold text-neutral-500 hover:text-neutral-50"
+          className="my-4 w-full flex flex-row items-center justify-center gap-2 font-bold text-neutral-500 hover:text-neutral-50"
         >
           <Avatar className="w-8 h-8">
             <AvatarImage src={session?.user?.image || '/default.jpg'} alt={session?.user?.name || 'nulll'} />
