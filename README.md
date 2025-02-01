@@ -105,15 +105,16 @@ Follow these steps to set up the project in your local development environment:
 
 ---
 
-## Step 6: Set Up GROQ API Key
+## Step 6: Set Up Hugging Face Access Token
 
-1. Go to [GROQ Console](https://console.groq.com/).
+1. Go to [Hugging Face](https://huggingface.co/).
 2. Create a new account or sign in if you already have one.
-3. Navigate to the **API Keys** section in the dashboard.
-4. Click on **Create API Key**.
-5. Give your API key a name (e.g., "Nexus Spaces Development").
-6. Copy the generated API key.
-7. Paste the key into `GROQ_API_KEY` in your `.env` file.
+3. Navigate to the **Settings** page and then to the **Access Tokens** section.
+4. Click on [Create new token](https://huggingface.co/settings/tokens/new?ownUserPermissions=inference.endpoints.infer.write&ownUserPermissions=inference.endpoints.write&globalPermissions=inference.serverless.write&tokenType=fineGrained).
+5. Give your Token a name (e.g., "Nexus Spaces Development").
+6. Check all **Inference** permissions under **User permissions**.
+6. Click **Create Token** and copy the generated token.
+7. Paste the key into `HF_API_KEY` in your `.env` file.
 
 > **Note:** Keep your API key secure and never commit it to version control.
 
