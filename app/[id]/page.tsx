@@ -14,7 +14,17 @@ export default function Home() {
   } else {
     redirect("/signin");
   }
-  const { conversationList, selectedConversation, setSelectedConversation, handleNewChat, updated, setUpdated, updateConversationList } = useConversationContext();
+  const {
+    conversationList,
+    selectedConversation,
+    setSelectedConversation,
+    conversation,
+    setConversation,
+    updated,
+    setUpdated,
+    updateConversationList,
+    handleNewChat
+  } = useConversationContext();
 
   return (
     <SidebarProvider>
