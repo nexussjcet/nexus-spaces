@@ -10,6 +10,14 @@ import {
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 import { ConversationMetadata } from "@/types";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useSession } from "next-auth/react";
+
+interface User {
+  id: string;
+  image?: string;
+  name?: string;
+}
 
 interface Props {
   conversationList: ConversationMetadata[];
@@ -19,17 +27,17 @@ interface Props {
 }
 
 export function ChatSidebar({ conversationList, selectedConversations, setSelectedConversation, handleNewChat }: Props) {
-
+  const {data:session} = useSession();
   return (
     <Sidebar className="bg-black">
       <SidebarHeader>
         <Image src="/nexus.webp" width={60} height={60} alt="Nexus" />
-        <Link
-          href="/profile"
-          className="pl-2 font-bold text-neutral-500 hover:text-neutral-50"
+        <Button
+          className="mb-3 rounded-xl"
+          onClick={handleNewChat}
         >
-          Profile
-        </Link>
+          New Chat
+        </Button>
       </SidebarHeader>
       <SidebarContent>
         {conversationList.map((conv) => (
@@ -46,12 +54,18 @@ export function ChatSidebar({ conversationList, selectedConversations, setSelect
         ))}
       </SidebarContent>
       <SidebarFooter>
-        <Button
-          className="mb-3 rounded-xl"
-          onClick={handleNewChat}
+      <Link
+          href="/profile"
+          className="pl-2 flex flex-row items-center gap-2 font-bold text-neutral-500 hover:text-neutral-50"
         >
-          New Chat
-        </Button>
+          <Avatar className="w-8 h-8">
+            <AvatarImage src={session?.user?.image || '/default.jpg'} alt={session?.user?.name || 'nulll'} />
+            <AvatarFallback>
+              {session?.user?.name?.charAt(0)?.toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+          <h4>{session?.user?.name || 'Profile'}</h4>
+        </Link>
       </SidebarFooter>
     </Sidebar>
   );
