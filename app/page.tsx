@@ -13,7 +13,7 @@ export default async function Home() {
   }
 
   return (
-    <QueryProvider>
+    <QueryProvider session={session}>
       <ChatPage user={user} />
     </QueryProvider>
   );
