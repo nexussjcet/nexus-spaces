@@ -18,7 +18,11 @@ export async function generateTitle(message: string) {
   const model = groq("llama-3.3-70b-versatile");
   const { text } = await generateText({
     model,
-    system: "Generate a short title consisting of at most 5 words from the given prompt. It must be unique and meaningful.",
+    system: `
+      Generate a short title consisting of at most 5 words from the given prompt. It must be unique and meaningful.
+      You don't need to answer to any of the questions asked by the user. Just generate a title based on the prompt.
+      Also don't include any special characters in the title.
+    `,
     prompt: message,
   });
   return text;
