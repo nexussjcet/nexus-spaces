@@ -50,7 +50,7 @@ export async function* sendMessage(convId: string, chatId: string, message: stri
         try {
           const jsonData = JSON.parse(chunk);
           yield jsonData;
-        } catch {}
+        } catch { }
       };
     }
     if (done) break;

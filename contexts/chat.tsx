@@ -124,7 +124,10 @@ export default function ConversationContextProvider({ children }: { children: Re
     } catch (error) {
       console.error('Error processing response:', error);
     }
-    updateConversationList();
+
+    if (!conversationList[0].title.updated) {
+      updateConversationList();
+    }
   };
 
   useEffect(() => {
