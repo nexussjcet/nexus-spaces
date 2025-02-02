@@ -55,7 +55,6 @@ export function ChatPage() {
                 {!chatMessage.isUser && chatMessage.thinking && (
                   <ThinkingProcess
                     duration={chatMessage.thinking.duration}
-                    summary={chatMessage.thinking.summary}
                     thoughts={chatMessage.thinking.process}
                   />
                 )}
