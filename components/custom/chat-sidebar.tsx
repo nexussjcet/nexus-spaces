@@ -38,6 +38,7 @@ export function ChatSidebar() {
           passHref
           onClick={() => router.push("/")}
           className="w-[95%] flex flex-row items-center justify-center cursor-pointer"
+          title="Home"
         >
           <Image src="/nexus.webp" width={100} height={100} alt="Nexus" />
           <h1 className="font-extrabold">NEXUS SPACES</h1>
@@ -59,7 +60,7 @@ export function ChatSidebar() {
             )}
             onClick={() => setSelectedConversation(conv.id)}
           >
-            <h3>{conv.title}</h3>
+            <h3>{conv.title.text}</h3>
           </div>
         ))}
       </SidebarContent>
