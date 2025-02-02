@@ -30,7 +30,7 @@ export async function generateTitle(message: string) {
 
 export async function* streamAIResponse(
   convId: string,
-  prompt: any,
+  prompt: { id: string, content: { text: string, files: string[] } }
 ) {
   const model = groq("deepseek-r1-distill-llama-70b");
   const system = `

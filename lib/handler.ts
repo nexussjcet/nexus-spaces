@@ -52,9 +52,7 @@ export async function* sendMessage(convId: string, chatId: string, message: stri
         try {
           const jsonData = JSON.parse(chunk);
           yield jsonData;
-        } catch (error) {
-          // console.log("Error parsing chunk:", error);
-        }
+        } catch {}
       };
     }
     if (done) break;

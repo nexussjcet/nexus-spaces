@@ -26,8 +26,7 @@ export function ChatPage() {
       loadConversation(convId);
       setSelectedConversation(convId);
     }
-  }, []);
-
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="flex flex-col-reverse gap-4 h-full p-4 items-center overflow-y-auto scroller">
