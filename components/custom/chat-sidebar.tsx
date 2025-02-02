@@ -79,7 +79,7 @@ export function ChatSidebar() {
               {session?.user?.name?.charAt(0)?.toUpperCase()}
             </AvatarFallback>
           </Avatar>
-          <h4>{session?.user?.name || 'Profile'}</h4>
+          <h4>My Profile</h4>
         </Link>
       </SidebarFooter>
     </Sidebar>
