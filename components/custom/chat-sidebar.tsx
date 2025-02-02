@@ -14,7 +14,7 @@ import { useSession } from "next-auth/react";
 import { useConversationContext } from "@/contexts/chat";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-
+import {MessageSquarePlus} from "lucide-react";
 export function ChatSidebar() {
   const {
     conversationList,
@@ -32,22 +32,26 @@ export function ChatSidebar() {
 
   return (
     <Sidebar className="bg-black">
-      <SidebarHeader>
+      <SidebarHeader className="mb-4">
+        <div className="flex flex-col justify-center items-center">
         <Link
           href="/"
           passHref
           onClick={() => router.push("/")}
-          className="w-[95%] flex flex-row items-center justify-center cursor-pointer"
+          className="w-[95%] flex flex-row items-center justify-center cursor-pointer mb-4"
         >
           <Image src="/nexus.webp" width={100} height={100} alt="Nexus" />
           <h1 className="font-extrabold">NEXUS SPACES</h1>
         </Link>
+        
         <Button
-          className="my-4 mx-3 rounded-xl"
+          className="w-fit md:w-48  justify-center flex gap-2 bg-[#4166d5] hover:bg-blue-500 text-white rounded-xl"
           onClick={handleNewChat}
         >
+          <MessageSquarePlus />
           New Chat
         </Button>
+        </div>
       </SidebarHeader>
       <SidebarContent>
         {conversationList.map((conv) => (
