@@ -10,8 +10,6 @@ export const initConversation = async (user: { id: string }) => {
     },
     body: JSON.stringify({
       convId: convId,
-      convTitle: "New Chat",
-      convTimestamp: new Date().toISOString(),
       userId: user.id,
     }),
   });
