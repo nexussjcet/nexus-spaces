@@ -12,7 +12,7 @@ import { updateBio } from "./actions";
 import { fetchGitHubData } from "@/lib/github";
 import { GitForkIcon, StarIcon, GitBranchIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-
+import {TopLanguagesSection} from "@/components/custom/top-lang";
 interface User {
   id: string;
   name: string | null;
@@ -21,6 +21,7 @@ interface User {
   image: string | null;
   bio: string | null;
   topRepositories: string | null;
+  topLanguages: string | null;
 }
 
 export default async function Profile() {
@@ -34,12 +35,16 @@ export default async function Profile() {
   }
 
   let repositories = [];
+  let topLanguages = [];
   try {
     if (user?.topRepositories) {
       repositories = JSON.parse(user.topRepositories);
     }
+    if (user?.topLanguages) {
+      topLanguages = JSON.parse(user.topLanguages);
+    }
   } catch (error) {
-    console.error("Error parsing topRepositories:", error);
+    console.error("Error parsing user data:", error);
   }
 
   return (
@@ -47,8 +52,8 @@ export default async function Profile() {
       <nav className="px-4 py-2 flex flex-row gap-2 items-center border-b border-dashed border-neutral-600">
         <Image src="/nexus.webp" width={60} height={60} alt="Nexus" />
         <h2 className="text-md md:text-xl font-bold">Nexus Spaces</h2>
-        <div className="ml-auto flex flex-row gap-6 items-center">
-          <Link href="/">Home</Link>
+        <div className="ml-auto flex flex-row gap-6  items-center">
+          <Link className="font-semibold" href="/">Home</Link>
           <SignOutButton />
         </div>
       </nav>
@@ -94,7 +99,7 @@ export default async function Profile() {
               </Button>
             </div>
           </div>
-
+          <div className="flex flex-col gap-20">
           <div className="grid md:grid-cols-2 gap-6 p-4 w-full max-w-[800px]">
             {repositories.length > 0 ? (
               repositories.map((repo: any, index: number) => (
@@ -134,6 +139,11 @@ export default async function Profile() {
                 No repositories found.
               </p>
             )}
+          </div>
+
+          <TopLanguagesSection 
+    topLanguages={topLanguages} 
+  />
           </div>
         </div>
       </div>
