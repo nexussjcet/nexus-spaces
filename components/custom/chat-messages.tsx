@@ -5,7 +5,7 @@ import { fetchConversation } from "@/lib/handler";
 import { useConversationContext } from "@/contexts/chat";
 import { useParams } from "next/navigation";
 import MarkdownRender from "./markdown-render";
-
+import ThinkingProcess from "../ui/think";
 export function ChatPage() {
   const convId = useParams().id;
 
@@ -52,6 +52,13 @@ export function ChatPage() {
                 {chatMessage.isUser ? "You" : "Spacey"}
               </h3>
               <div className={`max-w-full ${chatMessage.isUser ? 'bg-blue-600 rounded-xl px-4 py-2' : ''}`}>
+                {!chatMessage.isUser && chatMessage.thinking && (
+                  <ThinkingProcess
+                    duration={chatMessage.thinking.duration}
+                    summary={chatMessage.thinking.summary}
+                    thoughts={chatMessage.thinking.process}
+                  />
+                )}
                 <MarkdownRender>{chatMessage.content.text}</MarkdownRender>
               </div>
             </div>

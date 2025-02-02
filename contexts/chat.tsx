@@ -94,35 +94,68 @@ export default function ConversationContextProvider({ children }: { children: Re
 
   const handleSendMessage = async () => {
     if (!selectedConversation || !message.trim()) {
-      return;
+        return;
     }
-
     const chatId = `user-${Date.now().toString()}`;
     const userMessage: Message = {
-      id: chatId,
-      content: { text: message, files: await base64(files) },
-      isUser: true
+        id: chatId,
+        content: { text: message, files: await base64(files) },
+        isUser: true
     };
-
     updateConversation(userMessage);
     const response = sendMessage(selectedConversation, chatId, message, files);
     setMessage("");
     setFiles([]);
 
     let responseText = "";
+    let thinkingText = "";
+    let isInThinkingBlock = false;
+    let normalResponse = "";
+    let thinkingStartTime = Date.now();
+
     try {
-      for await (const chunk of response) {
-        responseText += chunk.data;
-        const assistantMessage: Message = {
-          id: chunk.id,
-          content: { text: responseText },
-          isUser: false
-        };
-        updateConversation(assistantMessage);
-        streaming.current = chunk.streaming; // Set streaming status
-      }
+        for await (const chunk of response) {
+            responseText += chunk.data;
+            while (responseText.length > 0) {
+                if (!isInThinkingBlock) {
+                    const thinkStart = responseText.indexOf("<think>");
+                    if (thinkStart === -1) {
+                        normalResponse += responseText;
+                        responseText = "";
+                    } else {
+                        normalResponse += responseText.substring(0, thinkStart);
+                        responseText = responseText.substring(thinkStart + 7); 
+                        isInThinkingBlock = true;
+                    }
+                } else {
+                    const thinkEnd = responseText.indexOf("</think>");
+                    if (thinkEnd === -1) {
+                        thinkingText += responseText;
+                        responseText = "";
+                    } else {
+                        thinkingText += responseText.substring(0, thinkEnd);
+                        responseText = responseText.substring(thinkEnd + 8); 
+                        isInThinkingBlock = false;
+                    }
+                }
+            }
+            const duration = ((Date.now() - thinkingStartTime) / 1000).toFixed(1);
+            const assistantMessage: Message = {
+                id: chunk.id,
+                content: { text: normalResponse.trim() },
+                isUser: false,
+                thinking: thinkingText ? {
+                    duration: `${duration}s`,
+                    summary: "Processing your request...",
+                    process: thinkingText.trim()
+                } : undefined
+            };
+
+            updateConversation(assistantMessage);
+            streaming.current = chunk.streaming;
+        }
     } catch (error) {
-      console.error('Error processing response:', error);
+        console.error('Error processing response:', error);
     }
 
     if (!conversationList[0].title.updated) {
