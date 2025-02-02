@@ -3,11 +3,9 @@ import { useState } from "react";
 
 const ThinkingProcess = ({ 
   duration,
-  summary,
   thoughts,
 }: { 
   duration: string;
-  summary: string;
   thoughts: string;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -28,19 +26,11 @@ const ThinkingProcess = ({
             <ChevronDown className="h-4 w-4 text-neutral-400" />
           )}
         </div>
-        {!isOpen && (
-          <p className="mt-2 text-neutral-200">
-            {summary}
-          </p>
-        )}
       </div>
       {isOpen && (
         <div className="mt-2 bg-neutral-900 rounded-lg p-4">
           <p className="text-neutral-300 whitespace-pre-line">
             {thoughts}
-          </p>
-          <p className="mt-4 text-neutral-200">
-            {summary}
           </p>
         </div>
       )}
