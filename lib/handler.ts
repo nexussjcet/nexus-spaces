@@ -10,8 +10,6 @@ export const initConversation = async (user: { id: string }) => {
     },
     body: JSON.stringify({
       convId: convId,
-      convTitle: "New Chat",
-      convTimestamp: new Date().toISOString(),
       userId: user.id,
     }),
   });
@@ -52,7 +50,7 @@ export async function* sendMessage(convId: string, chatId: string, message: stri
         try {
           const jsonData = JSON.parse(chunk);
           yield jsonData;
-        } catch {}
+        } catch { }
       };
     }
     if (done) break;

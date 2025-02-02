@@ -91,9 +91,10 @@ export async function* streamAIResponse(
   });
 
   // Generates a title
-  if (prevMessages.messages.length < 2) {
+  if (!prevMessages.title.updated) {
     await updateTitle(convId, await generateTitle(prompt.content.text));
   }
+
   for await (const chunk of aiResponse.fullStream) {
     if (chunk.type === "text-delta") {
       yield { type: "text", text: chunk.textDelta, streaming: false };

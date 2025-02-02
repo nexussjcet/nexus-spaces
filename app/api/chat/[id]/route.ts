@@ -29,11 +29,11 @@ export async function POST(
   const action = request.nextUrl.searchParams.get("action");
   if (action === "create") {
     // Creates new conversation
-    const { convId, convTitle, convTimestamp, userId } = await request.json();
+    const { convId, userId } = await request.json();
     const data = {
       id: convId,
-      title: convTitle,
-      timestamp: convTimestamp,
+      title: { updated: false, text: "New Chat" },
+      timestamp: new Date().toISOString(),
       messages: [],
       userId: userId,
     };
