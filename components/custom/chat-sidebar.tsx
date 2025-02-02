@@ -12,6 +12,8 @@ import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useSession } from "next-auth/react";
 import { useConversationContext } from "@/contexts/chat";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export function ChatSidebar() {
   const {
@@ -22,11 +24,21 @@ export function ChatSidebar() {
   } = useConversationContext();
 
   const { data: session } = useSession();
-  
+  const router = useRouter();
+
+  useEffect(() => {
+    setSelectedConversation("");
+  }, [router]);
+
   return (
     <Sidebar className="bg-black">
       <SidebarHeader>
-        <Link href="/" className="w-[95%] flex flex-row items-center justify-center cursor-pointer">
+        <Link
+          href="/"
+          passHref
+          onClick={() => router.push("/")}
+          className="w-[95%] flex flex-row items-center justify-center cursor-pointer"
+        >
           <Image src="/nexus.webp" width={100} height={100} alt="Nexus" />
           <h1 className="font-extrabold">NEXUS SPACES</h1>
         </Link>
