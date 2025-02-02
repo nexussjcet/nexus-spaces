@@ -5,7 +5,6 @@ export interface Message { // Message format stored in the database
   isError?: boolean;
   thinking?: {
     duration: string;
-    summary: string;
     process: string;
   };
 }
