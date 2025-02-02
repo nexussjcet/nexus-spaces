@@ -1,5 +1,5 @@
 "use client";
-import { useConversationContext } from "@/context/chat";
+import { useConversationContext } from "@/contexts/chat";
 import { Send, File } from "lucide-react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
@@ -13,6 +13,7 @@ export function ChatInput() {
     handleKeyDown,
     handleSubmit,
   } = useConversationContext();
+  
   return (
     <div
       className="flex flex-col w-full h-fit gap-2 border border-neutral-800 rounded-lg p-4 bg-neutral-950"

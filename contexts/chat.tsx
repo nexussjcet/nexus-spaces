@@ -1,5 +1,5 @@
 "use client";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { fetchAllConversation, fetchConversation, initConversation, sendMessage } from '@/lib/handler';
 import { Conversation, ConversationMetadata, Message } from '@/types';
 import { useState, createContext, useContext, useEffect, useRef } from 'react'
@@ -35,7 +35,7 @@ export default function ConversationContextProvider({ children }: { children: Re
   if (session) {
     user = { id: session.user?.id! };
   } else {
-    redirect("/signin");
+    return (<>{children}</>);
   }
 
   const router = useRouter();

@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import { Geist, Geist_Mono } from "next/font/google";
-import ConversationContextProvider from "@/context/chat";
+import ConversationContextProvider from "@/contexts/chat";
 import { QueryProvider } from "@/components/custom/query-provider";
 import type { Metadata } from "next";
 import "./globals.css";

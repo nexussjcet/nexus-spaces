@@ -2,7 +2,7 @@
 import React, { useEffect } from "react";
 import Image from "next/image";
 import { fetchConversation } from "@/lib/handler";
-import { useConversationContext } from "@/context/chat";
+import { useConversationContext } from "@/contexts/chat";
 import { useParams } from "next/navigation";
 import MarkdownRender from "./markdown-render";
 
