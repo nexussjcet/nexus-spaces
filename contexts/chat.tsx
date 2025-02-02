@@ -12,8 +12,6 @@ type ConversationContextProps = {
   setSelectedConversation: React.Dispatch<React.SetStateAction<string>>;
   conversation: Conversation;
   setConversation: React.Dispatch<React.SetStateAction<Conversation>>;
-  updated: boolean;
-  setUpdated: React.Dispatch<React.SetStateAction<boolean>>;
   message: string;
   setMessage: React.Dispatch<React.SetStateAction<string>>;
   files: File[];
@@ -79,7 +77,6 @@ export default function ConversationContextProvider({ children }: { children: Re
   const [conversationList, setConversationList] = useState<ConversationMetadata[]>([]);
   const [selectedConversation, setSelectedConversation] = useState<string>("");
   const [conversation, setConversation] = useState<Conversation>({} as Conversation);
-  const [updated, setUpdated] = useState(false);
   const [message, setMessage] = useState("");
   const [files, setFiles] = useState<File[]>([]);
   const streaming = useRef(false);
@@ -132,7 +129,6 @@ export default function ConversationContextProvider({ children }: { children: Re
     const res = await (await initConversation(user)).json();
     setSelectedConversation(res.data.id);
     updateConversationList();
-    setUpdated(false);
   };
 
   const handleKeyDown = async (e: React.KeyboardEvent) => {
@@ -190,12 +186,12 @@ export default function ConversationContextProvider({ children }: { children: Re
       console.error('Error processing response:', error);
     } finally {
       streaming.current = false;
-      if (!updated) {
-        await updateConversationList();
-        setUpdated(true);
+      if (!conversationList[0].title.updated) {
+      await updateConversationList();
       }
     }
-  };
+    };
+
 
   useEffect(() => {
     const loadConversation = async () => {
@@ -246,8 +242,6 @@ export default function ConversationContextProvider({ children }: { children: Re
         setSelectedConversation,
         conversation,
         setConversation,
-        updated,
-        setUpdated,
         message,
         setMessage,
         files,

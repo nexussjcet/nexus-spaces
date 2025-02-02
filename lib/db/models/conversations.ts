@@ -30,7 +30,7 @@ export async function addMessage(id: string, message: Message) {
 
 export async function updateTitle(convId: string, title: string) {
   await db.update(conversations).set({
-    title,
+    title: { updated: true, text: title },
   }).where(eq(conversations.id, convId));
 };
 
