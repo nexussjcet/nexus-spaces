@@ -5,7 +5,7 @@ import { fetchConversation } from "@/lib/handler";
 import { useConversationContext } from "@/contexts/chat";
 import { useParams } from "next/navigation";
 import MarkdownRender from "./markdown-render";
-
+import ThinkingProcess from "../ui/think";
 export function ChatPage() {
   const convId = useParams().id;
 
@@ -31,10 +31,17 @@ export function ChatPage() {
   return (
     <div className="flex flex-col-reverse gap-4 h-full p-4 items-center overflow-y-auto scroller">
       {conversation?.messages?.toReversed().map((chatMessage) => (
-        <div
-          className={`flex flex-col w-full max-w-[700px] ${chatMessage.isUser ? 'items-end' : ''}`}
-          key={chatMessage.id}
-        >
+  <div
+    className={`flex flex-col w-full max-w-[700px] ${chatMessage.isUser ? 'items-end' : ''}`}
+    key={chatMessage.id}
+  >
+    {!chatMessage.isUser && chatMessage.thinking && (
+      <ThinkingProcess
+        duration={chatMessage.thinking.duration}
+        summary={chatMessage.thinking.summary}
+        thoughts={chatMessage.thinking.process}
+      />
+    )}
           <div className={`flex items-start gap-2 ${chatMessage.isUser ? 'flex-row-reverse' : ''}`}>
             {!chatMessage.isUser && (
               <div className="w-6 h-6 rounded-full overflow-hidden flex-shrink-0 mt-1">
