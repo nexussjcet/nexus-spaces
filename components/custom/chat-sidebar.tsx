@@ -11,7 +11,7 @@ import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useSession } from "next-auth/react";
-import { useConversationContext } from "@/context/chat";
+import { useConversationContext } from "@/contexts/chat";
 
 export function ChatSidebar() {
   const {
