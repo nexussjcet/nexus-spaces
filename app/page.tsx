@@ -1,32 +1,23 @@
-"use client";
+import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import { ChatPage } from "@/components/custom/chat-page";
 import { ChatSidebar } from "@/components/custom/chat-sidebar";
+import { ChatHome } from "@/components/custom/chat-home";
+import { ChatInput } from "@/components/custom/chat-input";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { useConversationContext } from "@/context/conversation";
-import { useSession } from "next-auth/react";
 
-export default function Home() {
-  const session = useSession();
-  let user;
-  if (session) {
-    user = { id: session.data?.user?.id! };
-  } else {
+export default async function Home() {
+  const session = await auth();
+  if (!session) {
     redirect("/signin");
   }
-  const { conversationList, selectedConversation, setSelectedConversation, handleNewChat, updated, setUpdated, updateConversationList } = useConversationContext();
 
   return (
     <SidebarProvider>
-      <ChatSidebar
-        conversationList={conversationList}
-        selectedConversations={selectedConversation}
-        setSelectedConversation={setSelectedConversation}
-        handleNewChat={handleNewChat}
-      />
+      <ChatSidebar />
       <div className="flex flex-col h-screen w-full bg-black text-white p-4">
         <SidebarTrigger />
-        <ChatPage />
+        <ChatHome />
+        <ChatInput />
       </div>
     </SidebarProvider>
   );

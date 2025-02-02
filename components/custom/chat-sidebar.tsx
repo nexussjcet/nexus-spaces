@@ -9,25 +9,20 @@ import {
 } from "@/components/ui/sidebar";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
-import { ConversationMetadata } from "@/types";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useSession } from "next-auth/react";
+import { useConversationContext } from "@/context/chat";
 
-interface User {
-  id: string;
-  image?: string;
-  name?: string;
-}
+export function ChatSidebar() {
+  const {
+    conversationList,
+    selectedConversation,
+    setSelectedConversation,
+    handleNewChat,
+  } = useConversationContext();
 
-interface Props {
-  conversationList: ConversationMetadata[];
-  selectedConversations: string;
-  setSelectedConversation: React.Dispatch<React.SetStateAction<string>>;
-  handleNewChat: () => Promise<void>;
-}
-
-export function ChatSidebar({ conversationList, selectedConversations, setSelectedConversation, handleNewChat }: Props) {
   const { data: session } = useSession();
+  
   return (
     <Sidebar className="bg-black">
       <SidebarHeader>
@@ -48,7 +43,7 @@ export function ChatSidebar({ conversationList, selectedConversations, setSelect
             key={conv.id}
             className={cn(
               "px-4 py-2 cursor-pointer hover:bg-neutral-900",
-              conv.id === selectedConversations && "bg-neutral-900",
+              conv.id === selectedConversation && "bg-neutral-900",
             )}
             onClick={() => setSelectedConversation(conv.id)}
           >
