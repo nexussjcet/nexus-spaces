@@ -2,7 +2,7 @@ import Markdown from "react-markdown";
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import React from "react";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 
 const MarkdownRenderer = ({ children }: { children: React.ReactNode }) => {
   const markdownContent = typeof children === 'string'

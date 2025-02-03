@@ -15,6 +15,19 @@ export const initConversation = async (user: { id: string }) => {
   });
 };
 
+export const deleteConversation = async (convId: string, userId: string) => {
+  return await fetch(`/api/chat/${convId}?action=delete`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      convId: convId,
+      userId: userId,
+    }),
+  });
+}
+
 export const fetchConversation = async (convId: string) => {
   return await fetch(`/api/chat/${convId}`);
 }

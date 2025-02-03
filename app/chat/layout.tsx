@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import { Toaster } from "@/components/ui/sonner"
 import ChatContextProvider from "@/contexts/chat";
 
 export default async function RootLayout({
@@ -10,6 +11,7 @@ export default async function RootLayout({
   
   return (
     <ChatContextProvider>
+      <Toaster position="top-right" richColors />
       {children}
     </ChatContextProvider>
   );
