@@ -7,12 +7,13 @@ import {
   SidebarFooter,
   SidebarHeader,
 } from "@/components/ui/sidebar";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useSession } from "next-auth/react";
 import { useChatContext } from "@/contexts/chat";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 export function ChatSidebar() {
@@ -25,16 +26,27 @@ export function ChatSidebar() {
 
   const { data: session } = useSession();
   const router = useRouter();
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadConversations = async () => {
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
+    };
+    loadConversations();
+  }, []);
 
   useEffect(() => {
     setSelectedConversation("");
+    setLoading(false);
   }, [router]);
 
   return (
     <Sidebar className="bg-black">
       <SidebarHeader>
         <Link
-          href="/"
+          href="/chat"
           passHref
           onClick={() => router.push("/")}
           className="w-[95%] flex flex-row items-center justify-center cursor-pointer"
@@ -51,18 +63,31 @@ export function ChatSidebar() {
         </Button>
       </SidebarHeader>
       <SidebarContent>
-        {conversationList.map((conv) => (
-          <div
-            key={conv.id}
-            className={cn(
-              "px-4 py-2 cursor-pointer hover:bg-neutral-900",
-              conv.id === selectedConversation && "bg-neutral-900",
-            )}
-            onClick={() => setSelectedConversation(conv.id)}
-          >
-            <h3>{conv.title.text}</h3>
+        {loading ? (
+          <div className="flex flex-col justify-center mt-3 ml-5 gap-5">
+            <Skeleton className="bg-gray-600 h-[15px] w-[80%]" />
+            <Skeleton className="bg-gray-600 h-[15px] w-[80%]" />
+            <Skeleton className="bg-gray-600 h-[15px] w-[75%]" />
+            <Skeleton className="bg-gray-600 h-[15px] w-[70%]" />
+            <Skeleton className="bg-gray-600 h-[15px] w-[65%]" />
+            <Skeleton className="bg-gray-600 h-[15px] w-[75%]" />
           </div>
-        ))}
+        ) : (
+          <>
+            {conversationList.map((conv) => (
+              <div
+                key={conv.id}
+                className={cn(
+                  "px-4 py-2 cursor-pointer hover:bg-neutral-900",
+                  conv.id === selectedConversation && "bg-neutral-900",
+                )}
+                onClick={() => setSelectedConversation(conv.id)}
+              >
+                <h3>{conv.title.text}</h3>
+              </div>
+            ))}
+          </>
+        )}
       </SidebarContent>
       <SidebarFooter>
         <Link
