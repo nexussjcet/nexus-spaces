@@ -6,7 +6,7 @@ import { useState, createContext, useContext, useEffect, useRef } from 'react'
 import { useSession } from "next-auth/react";
 import { base64 } from "@/lib/format";
 
-type ConversationContextProps = {
+type ChatContextProps = {
   conversationList: ConversationMetadata[];
   selectedConversation: string;
   setSelectedConversation: React.Dispatch<React.SetStateAction<string>>;
@@ -25,9 +25,9 @@ type ConversationContextProps = {
   updateConversation: (newMessage: Message) => void;
 }
 
-const ConversationContext = createContext<ConversationContextProps | null>(null);
+const ChatContext = createContext<ChatContextProps | null>(null);
 
-export default function ConversationContextProvider({ children }: { children: React.ReactNode }) {
+export default function ChatContextProvider({ children }: { children: React.ReactNode }) {
   const { data: session } = useSession();
   let user;
   if (session) {
@@ -35,7 +35,6 @@ export default function ConversationContextProvider({ children }: { children: Re
   } else {
     return (<>{children}</>);
   }
-
   const router = useRouter();
 
   const [conversationList, setConversationList] = useState<ConversationMetadata[]>([]);
@@ -143,11 +142,11 @@ export default function ConversationContextProvider({ children }: { children: Re
         }
       }
     });
-    router.push(selectedConversation);
+    router.push(`/chat/${selectedConversation}`);
   }, [selectedConversation]);
 
   return (
-    <ConversationContext.Provider
+    <ChatContext.Provider
       value={{
         conversationList,
         selectedConversation,
@@ -167,12 +166,12 @@ export default function ConversationContextProvider({ children }: { children: Re
         updateConversation,
       }}>
       {children}
-    </ConversationContext.Provider>
+    </ChatContext.Provider>
   );
 }
 
-export function useConversationContext() {
-  const context = useContext(ConversationContext);
-  if (!context) throw new Error("useConversationContext must be used within a ConversationProvider");
+export function useChatContext() {
+  const context = useContext(ChatContext);
+  if (!context) throw new Error("useChatContext must be used within a ChatContextProvider");
   return context;
 }

@@ -1,6 +1,5 @@
 import { auth } from "@/auth";
 import { Geist, Geist_Mono } from "next/font/google";
-import ConversationContextProvider from "@/contexts/chat";
 import { QueryProvider } from "@/components/custom/query-provider";
 import type { Metadata } from "next";
 import "./globals.css";
@@ -34,9 +33,7 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased relative`}
       >
         <QueryProvider session={session}>
-          <ConversationContextProvider>
-            {children}
-          </ConversationContextProvider>
+          {children}
         </QueryProvider>
       </body>
     </html>

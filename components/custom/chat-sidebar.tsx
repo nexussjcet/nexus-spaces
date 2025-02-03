@@ -11,7 +11,7 @@ import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useSession } from "next-auth/react";
-import { useConversationContext } from "@/contexts/chat";
+import { useChatContext } from "@/contexts/chat";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
@@ -21,7 +21,7 @@ export function ChatSidebar() {
     selectedConversation,
     setSelectedConversation,
     handleNewChat,
-  } = useConversationContext();
+  } = useChatContext();
 
   const { data: session } = useSession();
   const router = useRouter();

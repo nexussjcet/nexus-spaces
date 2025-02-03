@@ -45,8 +45,14 @@ export default async function Profile() {
   return (
     <div className="flex flex-col w-full portrait:h-full h-screen bg-black text-white ">
       <nav className="px-4 py-2 flex flex-row gap-2 items-center border-b border-dashed border-neutral-600">
-        <Image src="/nexus.webp" width={60} height={60} alt="Nexus" />
-        <h2 className="text-md md:text-xl font-bold">Nexus Spaces</h2>
+        <Link
+          href="/"
+          title="Home"
+          className="flex flex-row items-center gap-2"
+        >
+          <Image src="/nexus.webp" width={70} height={70} alt="Nexus" />
+          <h2 className="text-md md:text-xl font-bold">NEXUS SPACES</h2>
+        </Link>
         <div className="ml-auto flex flex-row gap-6 items-center">
           <Link href="/">Home</Link>
           <SignOutButton />
@@ -63,15 +69,15 @@ export default async function Profile() {
             </Avatar>
             <div className="flex flex-col gap-2 w-full">
               <label className="text-sm mt-2">Name</label>
-              <Input 
-                value={user.name!} 
-                disabled 
+              <Input
+                value={user.name!}
+                disabled
                 className="rounded-xl bg-neutral-900 border-neutral-800"
               />
               <label className="text-sm mt-2">Email</label>
-              <Input 
-                value={user.email!} 
-                disabled 
+              <Input
+                value={user.email!}
+                disabled
                 className="rounded-xl bg-neutral-900 border-neutral-800"
               />
               <form action={updateBio} className="flex flex-col gap-2">
@@ -86,8 +92,8 @@ export default async function Profile() {
                   className="rounded-xl bg-neutral-900 border-neutral-800 resize-none"
                 />
               </form>
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 className="font-semibold mt-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white"
               >
                 Update Bio

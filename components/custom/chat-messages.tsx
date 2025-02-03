@@ -2,24 +2,27 @@
 import React, { useEffect } from "react";
 import Image from "next/image";
 import { fetchConversation } from "@/lib/handler";
-import { useConversationContext } from "@/contexts/chat";
-import { useParams } from "next/navigation";
+import { useChatContext } from "@/contexts/chat";
+import { useParams, useRouter } from "next/navigation";
 import MarkdownRender from "./markdown-render";
 
 export function ChatPage() {
   const convId = useParams().id;
+  const router = useRouter();
 
   const {
     setSelectedConversation,
     conversation,
     setConversation,
-  } = useConversationContext();
+  } = useChatContext();
 
   useEffect(() => {
     const loadConversation = async (id: string) => {
       const res = await (await fetchConversation(id)).json();
       if (res.success) {
         setConversation(res.data);
+      }else {
+        router.push("/chat");
       }
     };
     if (convId && typeof convId === "string") {
