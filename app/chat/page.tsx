@@ -14,7 +14,7 @@ export default async function Home() {
     <>
       <SidebarProvider>
         <ChatSidebar />
-        <div className="flex flex-col h-screen w-full bg-black text-white p-4">
+        <div className="flex flex-col w-full bg-black text-white p-4">
           <SidebarTrigger />
           <ChatHome />
         </div>

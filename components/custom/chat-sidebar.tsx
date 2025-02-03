@@ -46,7 +46,7 @@ export function ChatSidebar() {
     <Sidebar className="bg-black">
       <SidebarHeader>
         <Link
-          href="/"
+          href="/chat"
           passHref
           onClick={() => router.push("/")}
           className="w-[95%] flex flex-row items-center justify-center cursor-pointer"
