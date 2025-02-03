@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import { redirect } from "next/navigation";
 import { getUser } from "@/lib/db/models/users";
 import { updateBio } from "./actions";
-import { fetchGitHubData } from "@/lib/github";
 import { GitForkIcon, StarIcon, GitBranchIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
@@ -25,12 +24,12 @@ interface User {
 
 export default async function Profile() {
   const session = await auth();
-  let user: User | undefined;
+  let user: User;
 
   if (!session) {
     redirect("/signin");
   } else {
-    user = await getUser(session.user?.id!);
+    user = await getUser(session.user?.id!); // eslint-disable-line @typescript-eslint/no-non-null-asserted-optional-chain
   }
 
   let repositories = [];
@@ -103,7 +102,7 @@ export default async function Profile() {
 
           <div className="grid md:grid-cols-2 gap-6 p-4 w-full max-w-[800px]">
             {repositories.length > 0 ? (
-              repositories.map((repo: any, index: number) => (
+              repositories.map((repo: any, index: number) => ( // eslint-disable-line @typescript-eslint/no-explicit-any
                 <div key={index} className="group">
                   <div className="border border-neutral-800 rounded-xl p-6 transition-all hover:bg-neutral-900">
                     <div className="flex items-center justify-between mb-3">
