@@ -94,7 +94,7 @@ export default async function Profile() {
               </form>
               <Button
                 type="submit"
-                className="font-semibold mt-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white"
+                className="font-semibold mt-2 rounded-lg"
               >
                 Update Bio
               </Button>

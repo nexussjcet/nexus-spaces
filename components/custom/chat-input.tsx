@@ -1,11 +1,12 @@
 "use client";
 import { useChatContext } from "@/contexts/chat";
 import { Send, File } from "lucide-react";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export function ChatInput() {
   const {
+    textareaRef,
     message,
     setMessage,
     files,
@@ -20,6 +21,7 @@ export function ChatInput() {
     >
       <div className="flex flex-row items-center gap-2">
         <Input
+          ref={textareaRef}
           name="prompt"
           placeholder="Ask me anything..."
           className="flex-1 bg-transparent border border-neutral-700 rounded-xl focus:border-neutral-500 transition-colors"
@@ -28,7 +30,7 @@ export function ChatInput() {
           onKeyDown={handleKeyDown}
         />
         <Button
-          className="w-fit flex gap-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl"
+          className="w-fit flex gap-2 rounded-md"
           onClick={handleSubmit}
         >
           <Send className="h-4 w-4" />
@@ -36,7 +38,7 @@ export function ChatInput() {
         </Button>
       </div>
       <div className="flex items-center gap-2 text-sm text-neutral-400">
-        <label htmlFor="file-upload" className="flex items-center gap-1 cursor-pointer hover:text-neutral-300">
+        <label htmlFor="file-upload" className="flex items-center gap-2 cursor-pointer hover:text-neutral-300 mx-2 my-1">
           <File className="h-4 w-4" />
           {files.length > 0 ? `${files.length} files selected` : 'Attach files'}
         </label>

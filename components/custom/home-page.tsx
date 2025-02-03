@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
-import { Button } from "../ui/button";
 import { useSession } from "next-auth/react";
+import { Button } from "@/components/ui/button";
 
 export function HomePage() {
   const { data: session } = useSession();

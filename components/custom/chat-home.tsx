@@ -49,7 +49,7 @@ export function ChatHome() {
         </div>
       </div>
       <div className="mt-[5%] text-center text-zinc-500 text-sm">
-        <p>© 2025 Nexus Spaces | Made with 🤍 by The Nexus Project</p>
+        <p>© 2025 Nexus Spaces | Made with 🤍 by <a href="https://nexus.sjcetpalai.ac.in/" target="_blank"><u>The Nexus Project</u></a></p>
       </div>
     </div>
   );

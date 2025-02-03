@@ -59,6 +59,15 @@ export function ChatPage() {
             </div>
             <Skeleton className="bg-gray-600 w-[50px] h-[50px] rounded-full" />
           </div>
+          <div className="flex flex-row w-full max-w-[700px] gap-2 md:gap-4 mb-[5%]">
+            <Skeleton className="bg-gray-600 w-[50px] h-[50px] rounded-full" />
+            <div className="w-[80%] space-y-3">
+              <Skeleton className="bg-gray-600 h-[2vh] w-[90%]" />
+              <Skeleton className="bg-gray-600 h-[2vh] w-[80%]" />
+              <Skeleton className="bg-gray-600 h-[2vh] w-[85%]" />
+              <Skeleton className="bg-gray-600 h-[2vh] w-[70%]" />
+            </div>
+          </div>
         </div>
       ) : (
         <div className="flex flex-col-reverse gap-4 h-full p-4 items-center overflow-y-auto scroller">
@@ -83,7 +92,7 @@ export function ChatPage() {
                   <h3 className="font-bold text-neutral-400">
                     {chatMessage.isUser ? "You" : "Spacey"}
                   </h3>
-                  <div className={`max-w-full ${chatMessage.isUser ? 'bg-blue-600 rounded-xl px-4 py-2' : ''}`}>
+                  <div className={`max-w-full ${chatMessage.isUser ? 'bg-white text-black rounded-xl px-4 py-2' : ''}`}>
                     <MarkdownRender>{chatMessage.content.text}</MarkdownRender>
                   </div>
                 </div>

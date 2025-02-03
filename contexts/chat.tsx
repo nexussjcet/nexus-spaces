@@ -1,12 +1,14 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { fetchAllConversation, fetchConversation, initConversation, sendMessage } from '@/lib/handler';
 import { Conversation, ConversationMetadata, Message } from '@/types';
 import { useState, createContext, useContext, useEffect, useRef } from 'react'
 import { useSession } from "next-auth/react";
+import { toast } from "sonner"
+import { fetchAllConversation, fetchConversation, initConversation, deleteConversation, sendMessage } from '@/lib/handler';
 import { base64 } from "@/lib/format";
 
 type ChatContextProps = {
+  textareaRef: React.RefObject<HTMLInputElement | null>;
   conversationList: ConversationMetadata[];
   selectedConversation: string;
   setSelectedConversation: React.Dispatch<React.SetStateAction<string>>;
@@ -18,6 +20,7 @@ type ChatContextProps = {
   setFiles: React.Dispatch<React.SetStateAction<File[]>>;
   streaming: React.RefObject<boolean>;
   handleNewChat: () => Promise<void>;
+  handleDeleteChat: (convId: string) => Promise<void>;
   handleKeyDown: (e: React.KeyboardEvent) => void;
   handleSubmit: (event: React.MouseEvent<HTMLButtonElement>) => void;
   handleSendMessage: () => void;
@@ -43,6 +46,8 @@ export default function ChatContextProvider({ children }: { children: React.Reac
   const [message, setMessage] = useState("");
   const [files, setFiles] = useState<File[]>([]);
   const streaming = useRef(false);
+
+  const textareaRef = useRef<HTMLInputElement>(null);
 
   const updateConversationList = async () => {
     const res = await (await fetchAllConversation(user.id)).json();
@@ -75,9 +80,33 @@ export default function ChatContextProvider({ children }: { children: React.Reac
   };
 
   const handleNewChat = async () => {
-    const res = await (await initConversation(user)).json();
-    setSelectedConversation(res.data.id);
-    updateConversationList();
+    toast.promise(initConversation(user), {
+      loading: "Starting new chat...",
+      success: async (data) => {
+        const res = await data.json();
+        setSelectedConversation(res.data.id);
+        updateConversationList();
+        return "New chat created successfully";
+      },
+      error: 'Error occurred',
+    });
+  };
+
+  const handleDeleteChat = async (convId: string) => {
+    toast.promise(deleteConversation(convId, user.id), {
+      loading: "Deleting chat...",
+      success: async (data) => {
+        const res = await data.json();
+        if (res.success) {
+          if (selectedConversation === res.data.id) {
+            setSelectedConversation("");
+          }
+        }
+        updateConversationList();
+        return "Chat deleted successfully";
+      },
+      error: 'Error occurred',
+    });
   };
 
   const handleKeyDown = async (e: React.KeyboardEvent) => {
@@ -143,11 +172,13 @@ export default function ChatContextProvider({ children }: { children: React.Reac
       }
     });
     router.push(`/chat/${selectedConversation}`);
+    textareaRef.current?.focus();
   }, [selectedConversation]);
 
   return (
     <ChatContext.Provider
       value={{
+        textareaRef,
         conversationList,
         selectedConversation,
         setSelectedConversation,
@@ -159,6 +190,7 @@ export default function ChatContextProvider({ children }: { children: React.Reac
         setFiles,
         streaming,
         handleNewChat,
+        handleDeleteChat,
         handleKeyDown,
         handleSubmit,
         handleSendMessage,

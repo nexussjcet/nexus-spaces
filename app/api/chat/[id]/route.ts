@@ -41,9 +41,12 @@ export async function POST(
     return NextResponse.json({ success: true, message: "Conversation created", data });
   } else if (action === "delete") {
     // Delete a conversation
-    const { convId } = await request.json();
+    const { convId, userId } = await request.json();
+    const data = {
+      id: convId,
+    }
     deleteConversation(convId);
-    return NextResponse.json({ success: true, message: "Conversation deleted" });
+    return NextResponse.json({ success: true, message: "Conversation deleted", data });
   } else if (action === "ai") {
     // Call AI model
     const { prompt } = await request.json();
