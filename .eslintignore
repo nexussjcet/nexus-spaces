@@ -1,0 +1,7 @@
+app/**
+app/signin/**
+app/profile/**
+components/**
+components/custom/**
+lib/**
+lib/auth/**
