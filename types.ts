@@ -3,11 +3,6 @@ export interface Message { // Message format stored in the database
   content: { text?: string, files?: string[] };
   isUser?: boolean;
   isError?: boolean;
-  thinking?: {
-    duration: string;
-    summary: string;
-    process: string;
-  };
 }
 
 export interface Conversation { // Conversation format stored in the database
