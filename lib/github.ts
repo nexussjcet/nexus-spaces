@@ -70,7 +70,7 @@ export async function fetchGitHubData(accessToken: string) {
     const repos: Repository[] = await reposResponse.json();
 
     // Log repos with stars
-    const starredRepos = repos.filter((repo) => repo.stargazers_count > 0);
+    const starredRepos = repos.filter((repo) => repo.stargazers_count > 0);  // eslint-disable-line @typescript-eslint/no-unused-vars
 
     const languageStats: LanguageStats = {};
     repos.forEach((repo) => {

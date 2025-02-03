@@ -85,6 +85,7 @@ export default function ChatContextProvider({ children }: { children: React.Reac
       success: async (data) => {
         const res = await data.json();
         setSelectedConversation(res.data.id);
+        await new Promise((resolve) => setTimeout(resolve, 700));
         updateConversationList();
         return "New chat created successfully";
       },
@@ -102,6 +103,7 @@ export default function ChatContextProvider({ children }: { children: React.Reac
             setSelectedConversation("");
           }
         }
+        await new Promise((resolve) => setTimeout(resolve, 700));
         updateConversationList();
         return "Chat deleted successfully";
       },

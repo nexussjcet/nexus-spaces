@@ -11,7 +11,7 @@ export default async function Signin() {
   const session = await auth();
 
   if (session) {
-    const user = await getUser(session.user?.id!);
+    const user = await getUser(session.user?.id!); // eslint-disable-line @typescript-eslint/no-non-null-asserted-optional-chain
     if (!user.bio) {
       redirect("/profile");
     } else {

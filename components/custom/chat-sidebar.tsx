@@ -48,7 +48,7 @@ export function ChatSidebar() {
   useEffect(() => {
     setSelectedConversation("");
     setLoading(false);
-  }, [router]);
+  }, [router]); //eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <>

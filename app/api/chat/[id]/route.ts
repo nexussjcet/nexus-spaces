@@ -41,7 +41,7 @@ export async function POST(
     return NextResponse.json({ success: true, message: "Conversation created", data });
   } else if (action === "delete") {
     // Delete a conversation
-    const { convId, userId } = await request.json();
+    const { convId, userId } = await request.json(); // eslint-disable-line @typescript-eslint/no-unused-vars
     const data = {
       id: convId,
     }
