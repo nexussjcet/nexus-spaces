@@ -1,38 +1,38 @@
-import { CoreMessage } from "ai";
-import { HfInference } from "@huggingface/inference";
+import { createGroq } from "@ai-sdk/groq";
+import { CoreMessage, generateText, streamText } from "ai";
 import { getConversation, updateTitle } from "./db/models/conversations";
 
-const hf = new HfInference(process.env.HF_API_KEY);
+const groq = createGroq({ apiKey: process.env.GROQ_API_KEY });
 
 async function imageParts(imageList: string[]) {
   if (!imageList)
     return [];
-  const images: { type: "image_url", image_url: any }[] = [];
+  const images: { type: "image", image: string }[] = [];
   for await (const image of imageList) {
-    images.push({ type: "image_url", image_url: { url: image } });
+    images.push({ type: "image", image: image });
   };
   return images;
 }
 
-export async function generateTitle(message: CoreMessage) {
-  const model = "meta-llama/Llama-3.2-3B-Instruct";
-  const system = "Generate a short title consisting of at most 3 words from the given prompt.";
-  const aiResponse = hf.chatCompletion({
+export async function generateTitle(message: string) {
+  const model = groq("llama-3.3-70b-versatile");
+  const { text } = await generateText({
     model,
-    system,
-    messages: [message],
-    temperature: 0.5,
-    max_tokens: 2048,
-    top_p: 0.7,
+    system: `
+      Generate a short title consisting of at most 5 words from the given prompt. It must be unique and meaningful.
+      You don't need to answer to any of the questions asked by the user. Just generate a title based on the prompt.
+      Also don't include any special characters in the title.
+    `,
+    prompt: message,
   });
-  return (await aiResponse).choices[0].message.content || "Untitled";
+  return text;
 }
 
 export async function* streamAIResponse(
   convId: string,
-  prompt: any,
+  prompt: { id: string, content: { text: string, files: string[] } }
 ) {
-  const model = "deepseek-ai/DeepSeek-R1-Distill-Qwen-32B";
+  const model = groq("deepseek-r1-distill-llama-70b");
   const system = `
     You are a helpful AI agent called Spacey. You are part of a social media website called Nexus Spaces, developed by students of SJCET palai. Nexus Spaces is an AI driven social media website, where users can discover other users or posts by prompting you.
 
@@ -84,27 +84,23 @@ export async function* streamAIResponse(
   messages.push(message);
 
   // Execute the AI model
-  const aiResponse = hf.chatCompletionStream({
+  const aiResponse = streamText({
     model,
     system,
     messages,
-    temperature: 0.5,
-    max_tokens: 2048,
-    top_p: 0.7,
   });
 
   // Generates a title
-  if (prevMessages.messages.length < 2) {
-    await updateTitle(convId, await generateTitle(message));
+  if (!prevMessages.title.updated) {
+    await updateTitle(convId, await generateTitle(prompt.content.text));
   }
-  for await (const chunk of aiResponse) {
-    if (chunk.choices && chunk.choices.length > 0) {
-      const newContent = chunk.choices[0].delta.content;
-      if (chunk.choices[0].finish_reason === "stop") {
-        yield { type: "text", text: newContent, streaming: false };
-      } else {
-        yield { type: "text", text: newContent, streaming: true }
-      }
+
+  for await (const chunk of aiResponse.fullStream) {
+    if (chunk.type === "text-delta") {
+      yield { type: "text", text: chunk.textDelta, streaming: false };
+    }
+    if (chunk.type === "finish") {
+      yield { type: "text", text: "", streaming: true }
     }
   }
 }

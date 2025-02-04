@@ -10,12 +10,23 @@ export const initConversation = async (user: { id: string }) => {
     },
     body: JSON.stringify({
       convId: convId,
-      convTitle: "New Chat",
-      convTimestamp: new Date().toISOString(),
       userId: user.id,
     }),
   });
 };
+
+export const deleteConversation = async (convId: string, userId: string) => {
+  return await fetch(`/api/chat/${convId}?action=delete`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      convId: convId,
+      userId: userId,
+    }),
+  });
+}
 
 export const fetchConversation = async (convId: string) => {
   return await fetch(`/api/chat/${convId}`);
@@ -52,9 +63,7 @@ export async function* sendMessage(convId: string, chatId: string, message: stri
         try {
           const jsonData = JSON.parse(chunk);
           yield jsonData;
-        } catch (error) {
-          // console.log("Error parsing chunk:", error);
-        }
+        } catch { }
       };
     }
     if (done) break;

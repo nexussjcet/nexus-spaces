@@ -1,6 +1,9 @@
-import type { Metadata } from "next";
+import { auth } from "@/auth";
 import { Geist, Geist_Mono } from "next/font/google";
+import { QueryProvider } from "@/components/custom/query-provider";
+import type { Metadata } from "next";
 import "./globals.css";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -17,18 +20,22 @@ export const metadata: Metadata = {
     "Nexus spaces is a AI driven social media platform where SJCET students can find and connect with developers, designers and other skilled individuals.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
+
   return (
     <html lang="en">
-  <body
-    className={`${geistSans.variable} ${geistMono.variable} antialiased relative`}
-  >
-    {children}
-  </body>
-</html>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased relative`}
+      >
+        <QueryProvider session={session}>
+          {children}
+        </QueryProvider>
+      </body>
+    </html>
   );
 }
