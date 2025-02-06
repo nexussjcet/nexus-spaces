@@ -16,7 +16,18 @@ export default function Tiptap({
 }) {
   const editor = useEditor({
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+        bulletList: {
+          HTMLAttributes: {
+            class: "list-disc list-outside pl-5",
+          },
+        },
+        orderedList: {
+          HTMLAttributes: {
+            class: "list-decimal list-outside pl-5",
+          },
+        },
+      }),
       Heading.configure({
         levels: [1, 2],
       }),
