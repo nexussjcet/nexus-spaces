@@ -3,6 +3,7 @@
 import { Editor } from "@tiptap/react";
 import {
   Bold,
+  Code,
   Heading1,
   Heading2,
   Image,
@@ -10,6 +11,7 @@ import {
   Link,
   List,
   ListOrdered,
+  Quote,
 } from "lucide-react";
 import React from "react";
 
@@ -105,6 +107,22 @@ export default function Toolbar({ editor }: { editor: Editor | null }) {
       {/* Image */}
       <button onClick={addImage} className="p-2 rounded-lg hover:bg-gray-200">
         <Image size={18} className="text-black" />
+      </button>
+
+      {/* Quote */}
+      <button
+        onClick={() => editor.chain().focus().toggleBlockquote().run()}
+        className={`p-2 rounded-lg hover:bg-gray-200 ${editor.isActive("blockquote") ? "bg-gray-300" : ""}`}
+      >
+        <Quote size={18} className="text-black" />
+      </button>
+
+      {/* Code Block */}
+      <button
+        onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+        className={`p-2 rounded-lg hover:bg-gray-200 ${editor.isActive("codeBlock") ? "bg-gray-300" : ""}`}
+      >
+        <Code size={18} className="text-black" />
       </button>
     </div>
   );
