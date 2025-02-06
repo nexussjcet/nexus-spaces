@@ -58,13 +58,13 @@ export default function Toolbar({ editor }: { editor: Editor | null }) {
       {/* Text Formatting */}
       <button
         onClick={() => editor.chain().focus().toggleBold().run()}
-        className={`p-2 rounded-lg hover:bg-gray-100 ${editor.isActive("bold") ? "bg-gray-200" : ""}`}
+        className={`p-2 rounded-lg hover:bg-gray-200 ${editor.isActive("bold") ? "bg-gray-300" : ""}`}
       >
         <Bold size={18} className="text-black" />
       </button>
       <button
         onClick={() => editor.chain().focus().toggleItalic().run()}
-        className={`p-2 rounded-lg hover:bg-gray-100 ${editor.isActive("italic") ? "bg-gray-200" : ""}`}
+        className={`p-2 rounded-lg hover:bg-gray-200 ${editor.isActive("italic") ? "bg-gray-300" : ""}`}
       >
         <Italic size={18} className="text-black" />
       </button>
@@ -72,13 +72,13 @@ export default function Toolbar({ editor }: { editor: Editor | null }) {
       {/* Headings */}
       <button
         onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-        className={`p-2 rounded-lg hover:bg-gray-100 ${editor.isActive("heading", { level: 1 }) ? "bg-gray-200" : ""}`}
+        className={`p-2 rounded-lg hover:bg-gray-200 ${editor.isActive("heading", { level: 1 }) ? "bg-gray-300" : ""}`}
       >
         <Heading1 size={18} className="text-black" />
       </button>
       <button
         onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-        className={`p-2 rounded-lg hover:bg-gray-100 ${editor.isActive("heading", { level: 2 }) ? "bg-gray-200" : ""}`}
+        className={`p-2 rounded-lg hover:bg-gray-200 ${editor.isActive("heading", { level: 2 }) ? "bg-gray-300" : ""}`}
       >
         <Heading2 size={18} className="text-black" />
       </button>
@@ -86,24 +86,24 @@ export default function Toolbar({ editor }: { editor: Editor | null }) {
       {/* Lists */}
       <button
         onClick={() => editor.chain().focus().toggleBulletList().run()}
-        className={`p-2 rounded-lg hover:bg-gray-100 ${editor.isActive("bulletList") ? "bg-gray-200" : ""}`}
+        className={`p-2 rounded-lg hover:bg-gray-200 ${editor.isActive("bulletList") ? "bg-gray-300" : ""}`}
       >
         <List size={18} className="text-black" />
       </button>
       <button
         onClick={() => editor.chain().focus().toggleOrderedList().run()}
-        className={`p-2 rounded-lg hover:bg-gray-100 ${editor.isActive("orderedList") ? "bg-gray-200" : ""}`}
+        className={`p-2 rounded-lg hover:bg-gray-200 ${editor.isActive("orderedList") ? "bg-gray-300" : ""}`}
       >
         <ListOrdered size={18} className="text-black" />
       </button>
 
       {/* Link */}
-      <button onClick={addLink} className="p-2 rounded-lg hover:bg-gray-100">
+      <button onClick={addLink} className="p-2 rounded-lg hover:bg-gray-200">
         <Link size={18} className="text-black" />
       </button>
 
       {/* Image */}
-      <button onClick={addImage} className="p-2 rounded-lg hover:bg-gray-100">
+      <button onClick={addImage} className="p-2 rounded-lg hover:bg-gray-200">
         <Image size={18} className="text-black" />
       </button>
     </div>
