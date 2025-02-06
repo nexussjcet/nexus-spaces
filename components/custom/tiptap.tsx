@@ -1,5 +1,7 @@
 "use client";
 
+import Blockquote from "@tiptap/extension-blockquote";
+import CodeBlock from "@tiptap/extension-code-block";
 import Heading from "@tiptap/extension-heading";
 import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
@@ -27,6 +29,16 @@ export default function Tiptap({
             class: "list-decimal list-outside pl-5",
           },
         },
+        codeBlock: {
+          HTMLAttributes: {
+            class: "bg-gray-100 p-2 rounded-md font-mono",
+          },
+        },
+        blockquote: {
+          HTMLAttributes: {
+            class: "border-l-4 border-gray-300 pl-4 italic",
+          },
+        },
       }),
       Heading.configure({
         levels: [1, 2],
@@ -37,12 +49,14 @@ export default function Tiptap({
         linkOnPaste: true,
       }),
       Image,
+      Blockquote, // Add Blockquote extension
+      CodeBlock, // Add CodeBlock extension
     ],
     content: description,
     editorProps: {
       attributes: {
         class:
-          "tiptap rounded-b-md border min-h-[150px] border-input bg-transparent p-2 text-white",
+          "rounded-b-md border min-h-[150px] border-input bg-transparent p-2 text-white",
       },
     },
     onUpdate: ({ editor }) => {
