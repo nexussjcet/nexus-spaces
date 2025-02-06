@@ -6,6 +6,16 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.tiptap h1 {
+  font-size: 2em;
+  font-weight: bold;
+}
+
+.tiptap h2 {
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
