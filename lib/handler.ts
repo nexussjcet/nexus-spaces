@@ -40,6 +40,7 @@ export const fetchAllConversation = async (userId: string) => {
 
 export async function* sendMessage(convId: string, chatId: string, message: string, files: File[]) {
   let done = false;
+  let id: string = "";
   const queue: SSEChunk[] = [];
   let resolveQueue: (() => void) | null = null;
 
@@ -75,8 +76,13 @@ export async function* sendMessage(convId: string, chatId: string, message: stri
     }),
     openWhenHidden: true,
     onmessage: (e) => {
-      if (e.event === "json-delta") {
-        pushEvent(JSON.parse(e.data));
+      switch (e.event) {
+        case "json-delta":
+          pushEvent({ id, ...JSON.parse(e.data) });
+          break;
+        case "meta":
+          id = `assitant-${JSON.parse(e.data).id}`;
+          break;
       }
     },
     onclose: () => {

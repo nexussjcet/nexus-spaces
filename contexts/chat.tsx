@@ -150,12 +150,12 @@ export default function ChatContextProvider({ children }: { children: React.Reac
             isUser: false
           };
           updateConversation(assistantMessage);
-          streaming.current = chunk.streaming; // Set streaming status
+          streaming.current = true;
         } else {
           toast.error("Internal server error");
-          streaming.current = false;
         }
       }
+      streaming.current = false;
     } catch (error) {
       console.error('Error processing response:', error);
     }

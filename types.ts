@@ -24,5 +24,4 @@ export interface SSEChunk { // SSE chunk format
   success: boolean,
   id: string,
   data: string,
-  streaming: boolean
 }

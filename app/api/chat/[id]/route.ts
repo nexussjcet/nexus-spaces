@@ -56,20 +56,23 @@ export async function POST(
     else
       dbFormat = { id: prompt.id, content: { text: prompt.content.text }, isUser: true };
     addMessage(id, dbFormat); // Add user message to db
-    const chatId = `assitant-${Date.now().toString()}`;
+    const timestamp_id = Date.now().toString();
+    const chatId = `assitant-${timestamp_id}`;
     const aiResponse = streamAIResponse(id, prompt);
+    const metaData = { id: timestamp_id };
     let data = "";
 
     // Create a new ReadableStream to handle the streaming response
     const stream = new ReadableStream({
       async start(controller) {
         try {
+          controller.enqueue(new TextEncoder().encode(`event: meta\ndata: ${JSON.stringify(metaData)}\n\n`));
           controller.enqueue(new TextEncoder().encode(`event: type\ndata: json-delta\n\n`));
           for await (const chunk of aiResponse) {
             let response;
             if (!chunk.streaming) break;
             if (chunk.type === "text") {
-              const jsonData = { success: true, id: chatId, data: chunk.text, streaming: chunk.streaming };
+              const jsonData = { success: true, data: chunk.text };
               response = JSON.stringify(jsonData);
               data += chunk.text;
             }
