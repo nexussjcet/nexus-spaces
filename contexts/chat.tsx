@@ -142,15 +142,20 @@ export default function ChatContextProvider({ children }: { children: React.Reac
     let responseText = "";
     try {
       for await (const chunk of response) {
-        responseText += chunk.data;
-        const assistantMessage: Message = {
-          id: chunk.id,
-          content: { text: responseText },
-          isUser: false
-        };
-        updateConversation(assistantMessage);
-        streaming.current = chunk.streaming; // Set streaming status
+        if (chunk?.success) {
+          responseText += chunk.data;
+          const assistantMessage: Message = {
+            id: chunk.id,
+            content: { text: responseText },
+            isUser: false
+          };
+          updateConversation(assistantMessage);
+          streaming.current = true;
+        } else {
+          toast.error("Internal server error");
+        }
       }
+      streaming.current = false;
     } catch (error) {
       console.error('Error processing response:', error);
     }

@@ -16,6 +16,7 @@
     "@llm-ui/code": "^0.13.3",
     "@llm-ui/markdown": "^0.13.3",
     "@llm-ui/react": "^0.13.3",
+    "@microsoft/fetch-event-source": "^2.0.1",
     "@radix-ui/react-alert-dialog": "^1.1.5",
     "@radix-ui/react-avatar": "^1.1.2",
     "@radix-ui/react-dialog": "^1.1.4",

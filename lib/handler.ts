@@ -1,5 +1,7 @@
 import { v4 as uuid4 } from 'uuid';
 import { base64 } from './format';
+import { fetchEventSource } from '@microsoft/fetch-event-source';
+import type { SSEChunk } from '../types';
 
 export const initConversation = async (user: { id: string }) => {
   const convId = uuid4();
@@ -37,7 +39,28 @@ export const fetchAllConversation = async (userId: string) => {
 }
 
 export async function* sendMessage(convId: string, chatId: string, message: string, files: File[]) {
-  const response = await fetch(`/api/chat/${convId}?action=ai`, {
+  let done = false;
+  let id: string = "";
+  const queue: SSEChunk[] = [];
+  let resolveQueue: (() => void) | null = null;
+
+  // Helper functions
+  function pushEvent(data: SSEChunk) {
+    queue.push(data);
+    if (resolveQueue) {
+      resolveQueue();
+      resolveQueue = null;
+    }
+  }
+
+  function waitForEvent(): Promise<void> {
+    return new Promise((resolve) => {
+      resolveQueue = resolve;
+    });
+  }
+
+  // SSE connection
+  fetchEventSource(`/api/chat/${convId}?action=ai`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -51,21 +74,30 @@ export async function* sendMessage(convId: string, chatId: string, message: stri
         },
       },
     }),
+    openWhenHidden: true,
+    onmessage: (e) => {
+      switch (e.event) {
+        case "json-delta":
+          pushEvent({ id, ...JSON.parse(e.data) });
+          break;
+        case "meta":
+          id = `assitant-${JSON.parse(e.data).id}`;
+          break;
+      }
+    },
+    onclose: () => {
+      done = true;
+      if (resolveQueue) resolveQueue();
+    },
   });
-  // Capture the streaming response
-  const reader = response?.body?.getReader();
-  const decoder = new TextDecoder();
-  while (true) {
-    const { value, done } = await reader!.read();
-    if (value) {
-      const decodedChunk = decoder.decode(value);
-      for await (const chunk of decodedChunk.split("{%%}")) {
-        try {
-          const jsonData = JSON.parse(chunk);
-          yield jsonData;
-        } catch { }
-      };
+
+  // Yield data from queue
+  while (!done || queue.length > 0) {
+    if (queue.length === 0) {
+      await waitForEvent();
     }
-    if (done) break;
+    while (queue.length > 0) {
+      yield queue.shift();
+    }
   }
 };
