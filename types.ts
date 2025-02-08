@@ -19,3 +19,10 @@ export interface ConversationMetadata { // Contains only conversation metadata
   timestamp: string;
   userId: string;
 }
+
+export interface SSEChunk { // SSE chunk format
+  success: boolean,
+  id: string,
+  data: string,
+  streaming: boolean
+}

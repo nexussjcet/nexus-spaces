@@ -64,15 +64,18 @@ export async function POST(
     const stream = new ReadableStream({
       async start(controller) {
         try {
+          controller.enqueue(new TextEncoder().encode(`event: type\ndata: json-delta\n\n`));
           for await (const chunk of aiResponse) {
             let response;
+            if (!chunk.streaming) break;
             if (chunk.type === "text") {
               const jsonData = { success: true, id: chatId, data: chunk.text, streaming: chunk.streaming };
-              response = JSON.stringify(jsonData) + "{%%}"; // {%%} is a delimiter that indicates the end of the response
+              response = JSON.stringify(jsonData);
               data += chunk.text;
             }
-            controller.enqueue(new TextEncoder().encode(response));
+            controller.enqueue(new TextEncoder().encode(`event: json-delta\ndata: ${response}\n\n`));
           }
+          controller.enqueue(new TextEncoder().encode(`event: stop\ndata: [DONE]\n\n`));
           // Add assistant messages to db
           await addMessage(id, {
             id: chatId,
@@ -86,8 +89,12 @@ export async function POST(
       },
     });
     return new Response(stream, {
-      headers: { "Content-Type": "application/json", "Transfer-Encoding": "chunked" },
-    });
+      headers: {
+        'Content-Type': 'text/event-stream; charset=utf-8',
+        'Connection': 'keep-alive',
+        'Cache-Control': 'no-cache, no-transform',
+      },
+    })
   } else {
     return NextResponse.json({ success: false, message: "Invalid action" });
   }
