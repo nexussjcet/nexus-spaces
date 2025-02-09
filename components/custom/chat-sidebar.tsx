@@ -20,7 +20,8 @@ import { useChatContext } from "@/contexts/chat";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { MoreHorizontal } from "lucide-react";
-import { toast } from "sonner"
+import { toast } from "sonner";
+import { motion, AnimatePresence } from "motion/react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 export function ChatSidebar() {
@@ -46,10 +47,6 @@ export function ChatSidebar() {
     loadConversations();
   }, [sidebarLoading]);
 
-  useEffect(() => {
-    setSelectedConversation("");
-  }, [router]); //eslint-disable-line react-hooks/exhaustive-deps
-
   return (
     <>
       <Sidebar className="bg-black">
@@ -57,7 +54,10 @@ export function ChatSidebar() {
           <Link
             href="/chat"
             passHref
-            onClick={() => router.push("/")}
+            onClick={() => {
+              router.push("/");
+              setSelectedConversation("");
+            }}
             className="w-[95%] flex flex-row items-center justify-center cursor-pointer"
             title="Home"
           >
@@ -83,53 +83,63 @@ export function ChatSidebar() {
             </div>
           ) : (
             <SidebarMenu>
-              {conversationList.map((conv) => (
-                <SidebarMenuItem
-                  key={conv.id}
-                  className="mx-4 my-1"
-                  title={conv.title.text}
-                >
-                  <SidebarMenuButton
-                    asChild
-                    className={cn(
-                      "p-5 cursor-pointer hover:bg-neutral-900",
-                      conv.id === selectedConversation && "bg-neutral-900",
-                    )}
-                    onClick={() => setSelectedConversation(conv.id)}
+              <AnimatePresence>
+                {conversationList.map((conv) => (
+                  <motion.div
+                    key={conv.id}
+                    initial={{ opacity: 0, y: -10, }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: 10 }}
+                    transition={{ duration: 0.3 }}
                   >
-                    <span>{conv.title.text}</span>
-                  </SidebarMenuButton>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild
-                      className="mt-1"
+                    <SidebarMenuItem
+                      key={conv.id}
+                      className="mx-4 my-1"
+                      title={conv.title.text}
                     >
-                      <SidebarMenuAction>
-                        <MoreHorizontal />
-                      </SidebarMenuAction>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent side="right" align="start">
-                      <DropdownMenuLabel>Chat Options</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem
-                        className="cursor-pointer"
-                        onClick={() => {
-                          toast("Not Available Yet", {
-                            description: "Feature coming soon...",
-                          });
-                        }}
+                      <SidebarMenuButton
+                        asChild
+                        className={cn(
+                          "p-5 cursor-pointer hover:bg-neutral-900",
+                          conv.id === selectedConversation && "bg-neutral-900",
+                        )}
+                        onClick={() => setSelectedConversation(conv.id)}
                       >
-                        <span>View Details</span>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem
-                        className="cursor-pointer"
-                        onClick={() => handleDeleteChat(conv.id)}
-                      >
-                        <span>Delete Chat</span>
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </SidebarMenuItem>
-              ))}
+                        <span>{conv.title.text}</span>
+                      </SidebarMenuButton>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild
+                          className="mt-1"
+                        >
+                          <SidebarMenuAction>
+                            <MoreHorizontal />
+                          </SidebarMenuAction>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent side="right" align="start">
+                          <DropdownMenuLabel>Chat Options</DropdownMenuLabel>
+                          <DropdownMenuSeparator />
+                          <DropdownMenuItem
+                            className="cursor-pointer"
+                            onClick={() => {
+                              toast("Not Available Yet", {
+                                description: "Feature coming soon...",
+                              });
+                            }}
+                          >
+                            <span>View Details</span>
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            className="cursor-pointer"
+                            onClick={() => handleDeleteChat(conv.id)}
+                          >
+                            <span>Delete Chat</span>
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </SidebarMenuItem>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
             </SidebarMenu>
           )}
         </SidebarContent>

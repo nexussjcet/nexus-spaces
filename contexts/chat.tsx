@@ -19,10 +19,10 @@ type ChatContextProps = {
   files: File[];
   setFiles: React.Dispatch<React.SetStateAction<File[]>>;
   streaming: React.RefObject<boolean>;
-  messageLoading: boolean;
-  setMessageLoading: React.Dispatch<React.SetStateAction<boolean>>;
   sidebarLoading: boolean;
   setSidebarLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  messageLoading: boolean;
+  setMessageLoading: React.Dispatch<React.SetStateAction<boolean>>;
   handleNewChat: () => Promise<void>;
   handleDeleteChat: (convId: string) => Promise<void>;
   handleKeyDown: (e: React.KeyboardEvent) => void;
@@ -50,9 +50,8 @@ export default function ChatContextProvider({ children }: { children: React.Reac
   const [message, setMessage] = useState("");
   const [files, setFiles] = useState<File[]>([]);
   const streaming = useRef(false);
-  const [messageLoading, setMessageLoading] = useState(true);
   const [sidebarLoading, setSidebarLoading] = useState(true);
-
+  const [messageLoading, setMessageLoading] = useState(true);
   const textareaRef = useRef<HTMLInputElement>(null);
 
   const updateConversationList = async () => {
@@ -86,7 +85,6 @@ export default function ChatContextProvider({ children }: { children: React.Reac
   };
 
   const handleNewChat = async () => {
-    setSidebarLoading(true);
     toast.promise(initConversation(user), {
       loading: "Starting new chat...",
       success: async (data) => {
@@ -101,21 +99,20 @@ export default function ChatContextProvider({ children }: { children: React.Reac
   };
 
   const handleDeleteChat = async (convId: string) => {
-    setSidebarLoading(true);
     toast.promise(deleteConversation(convId, user.id), {
       loading: "Deleting chat...",
       success: async (data) => {
         const res = await data.json();
         if (res.success) {
-          if (selectedConversation === res.data.id) {
-            setSelectedConversation("");
-          }
+          await new Promise((resolve) => setTimeout(resolve, 500));
+          if (selectedConversation === convId) setSelectedConversation("");
+          updateConversationList();
+          return "Chat deleted successfully";
+        } else {
+          throw new Error("Failed to delete chat");
         }
-        await new Promise((resolve) => setTimeout(resolve, 700));
-        updateConversationList();
-        return "Chat deleted successfully";
       },
-      error: 'Error occurred',
+      error: "Failed to delete chat",
     });
   };
 
@@ -188,12 +185,12 @@ export default function ChatContextProvider({ children }: { children: React.Reac
       }
     });
     const focusTextarea = async () => {
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await new Promise(resolve => setTimeout(resolve, 300));
       textareaRef.current?.focus();
     }
     router.push(`/chat/${selectedConversation}`);
     focusTextarea();
-    setMessageLoading(true);
+    if (selectedConversation !== "") setMessageLoading(true);
   }, [selectedConversation]);
 
   return (
@@ -210,9 +207,9 @@ export default function ChatContextProvider({ children }: { children: React.Reac
         files,
         setFiles,
         streaming,
-        messageLoading,
         sidebarLoading,
         setSidebarLoading,
+        messageLoading,
         setMessageLoading,
         handleNewChat,
         handleDeleteChat,
