@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { Conversation, ConversationMetadata, Message } from '@/types';
-import { useState, createContext, useContext, useEffect, useRef } from 'react'
+import { useState, createContext, useContext, useEffect, useRef, use } from 'react'
 import { useSession } from "next-auth/react";
 import { toast } from "sonner"
 import { fetchAllConversation, fetchConversation, initConversation, deleteConversation, sendMessage } from '@/lib/handler';
@@ -19,6 +19,10 @@ type ChatContextProps = {
   files: File[];
   setFiles: React.Dispatch<React.SetStateAction<File[]>>;
   streaming: React.RefObject<boolean>;
+  messageLoading: boolean;
+  setMessageLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  sidebarLoading: boolean;
+  setSidebarLoading: React.Dispatch<React.SetStateAction<boolean>>;
   handleNewChat: () => Promise<void>;
   handleDeleteChat: (convId: string) => Promise<void>;
   handleKeyDown: (e: React.KeyboardEvent) => void;
@@ -46,6 +50,8 @@ export default function ChatContextProvider({ children }: { children: React.Reac
   const [message, setMessage] = useState("");
   const [files, setFiles] = useState<File[]>([]);
   const streaming = useRef(false);
+  const [messageLoading, setMessageLoading] = useState(true);
+  const [sidebarLoading, setSidebarLoading] = useState(true);
 
   const textareaRef = useRef<HTMLInputElement>(null);
 
@@ -80,6 +86,7 @@ export default function ChatContextProvider({ children }: { children: React.Reac
   };
 
   const handleNewChat = async () => {
+    setSidebarLoading(true);
     toast.promise(initConversation(user), {
       loading: "Starting new chat...",
       success: async (data) => {
@@ -94,6 +101,7 @@ export default function ChatContextProvider({ children }: { children: React.Reac
   };
 
   const handleDeleteChat = async (convId: string) => {
+    setSidebarLoading(true);
     toast.promise(deleteConversation(convId, user.id), {
       loading: "Deleting chat...",
       success: async (data) => {
@@ -167,6 +175,7 @@ export default function ChatContextProvider({ children }: { children: React.Reac
 
   useEffect(() => {
     updateConversationList();
+    setSidebarLoading(true);
   }, []);
 
   useEffect(() => {
@@ -178,8 +187,13 @@ export default function ChatContextProvider({ children }: { children: React.Reac
         }
       }
     });
+    const focusTextarea = async () => {
+      await new Promise(resolve => setTimeout(resolve, 100));
+      textareaRef.current?.focus();
+    }
     router.push(`/chat/${selectedConversation}`);
-    textareaRef.current?.focus();
+    focusTextarea();
+    setMessageLoading(true);
   }, [selectedConversation]);
 
   return (
@@ -196,6 +210,10 @@ export default function ChatContextProvider({ children }: { children: React.Reac
         files,
         setFiles,
         streaming,
+        messageLoading,
+        sidebarLoading,
+        setSidebarLoading,
+        setMessageLoading,
         handleNewChat,
         handleDeleteChat,
         handleKeyDown,

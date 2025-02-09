@@ -13,11 +13,11 @@ import {
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { SidebarProfile } from "@/components/custom/sidebar-profile";
 import { cn } from "@/lib/utils";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useSession } from "next-auth/react";
 import { useChatContext } from "@/contexts/chat";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { MoreHorizontal } from "lucide-react";
 import { toast } from "sonner"
@@ -28,26 +28,26 @@ export function ChatSidebar() {
     conversationList,
     selectedConversation,
     setSelectedConversation,
+    sidebarLoading,
+    setSidebarLoading,
     handleNewChat,
     handleDeleteChat
   } = useChatContext();
 
   const { data: session } = useSession();
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadConversations = async () => {
       setTimeout(() => {
-        setLoading(false);
+        setSidebarLoading(false);
       }, 500);
     };
     loadConversations();
-  }, []);
+  }, [sidebarLoading]);
 
   useEffect(() => {
     setSelectedConversation("");
-    setLoading(false);
   }, [router]); //eslint-disable-line react-hooks/exhaustive-deps
 
   return (
@@ -72,7 +72,7 @@ export function ChatSidebar() {
           </Button>
         </SidebarHeader>
         <SidebarContent>
-          {loading ? (
+          {sidebarLoading ? (
             <div className="flex flex-col justify-center mt-3 ml-5 gap-5">
               <Skeleton className="bg-gray-600 h-[15px] w-[80%]" />
               <Skeleton className="bg-gray-600 h-[15px] w-[80%]" />
@@ -134,18 +134,7 @@ export function ChatSidebar() {
           )}
         </SidebarContent>
         <SidebarFooter>
-          <Link
-            href="/profile"
-            className="my-4 w-full flex flex-row items-center justify-center gap-2 font-bold text-neutral-500 hover:text-neutral-50"
-          >
-            <Avatar className="w-8 h-8">
-              <AvatarImage src={session?.user?.image || '/default.jpg'} alt={session?.user?.name || 'nulll'} />
-              <AvatarFallback>
-                {session?.user?.name?.charAt(0)?.toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
-            <h4>{session?.user?.name || 'Profile'}</h4>
-          </Link>
+          <SidebarProfile session={session} />
         </SidebarFooter>
       </Sidebar>
     </>
