@@ -12,6 +12,7 @@ import {
   List,
   ListOrdered,
   Quote,
+  Underline as UnderlineIcon,
 } from "lucide-react";
 import React from "react";
 
@@ -69,6 +70,12 @@ export default function Toolbar({ editor }: { editor: Editor | null }) {
         className={`p-2 rounded-lg hover:bg-gray-200 ${editor.isActive("italic") ? "bg-gray-300" : ""}`}
       >
         <Italic size={18} className="text-black" />
+      </button>
+      <button
+        onClick={() => editor.chain().focus().toggleUnderline().run()}
+        className={`p-2 rounded-lg hover:bg-gray-200 ${editor.isActive("underline") ? "bg-gray-300" : ""}`}
+      >
+        <UnderlineIcon size={18} className="text-black" />
       </button>
 
       {/* Headings */}
