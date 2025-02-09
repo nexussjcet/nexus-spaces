@@ -11,7 +11,7 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import Tiptap from "./tiptap";
+import Tiptap from "./tiptap-dynamic";
 
 export default function TextEditor() {
   const formSchema = z.object({
