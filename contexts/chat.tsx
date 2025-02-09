@@ -85,6 +85,12 @@ export default function ChatContextProvider({ children }: { children: React.Reac
   };
 
   const handleNewChat = async () => {
+    const prevNew = conversationList.find((conv) => conv.title.updated === false);
+    if (prevNew) {
+      toast.error("New chat already exists");
+      setSelectedConversation(prevNew.id);
+      return;
+    }
     toast.promise(initConversation(user), {
       loading: "Starting new chat...",
       success: async (data) => {
@@ -92,7 +98,7 @@ export default function ChatContextProvider({ children }: { children: React.Reac
         setSelectedConversation(res.data.id);
         await new Promise((resolve) => setTimeout(resolve, 700));
         updateConversationList();
-        return "New chat created successfully";
+        return "New chat created";
       },
       error: 'Error occurred',
     });

@@ -1,7 +1,13 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { useEffect } from "react";
+import { MoreHorizontal } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
+import { toast } from "sonner";
 import {
+  useSidebar,
   Sidebar,
   SidebarContent,
   SidebarFooter,
@@ -15,13 +21,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { SidebarProfile } from "@/components/custom/sidebar-profile";
 import { cn } from "@/lib/utils";
-import { useSession } from "next-auth/react";
 import { useChatContext } from "@/contexts/chat";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { MoreHorizontal } from "lucide-react";
-import { toast } from "sonner";
-import { motion, AnimatePresence } from "motion/react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 export function ChatSidebar() {
@@ -36,7 +36,7 @@ export function ChatSidebar() {
   } = useChatContext();
 
   const { data: session } = useSession();
-  const router = useRouter();
+  const { setOpenMobile } = useSidebar();
 
   useEffect(() => {
     const loadConversations = async () => {
@@ -55,7 +55,7 @@ export function ChatSidebar() {
             href="/chat"
             passHref
             onClick={() => {
-              router.push("/");
+              setOpenMobile(false);
               setSelectedConversation("");
             }}
             className="w-[95%] flex flex-row items-center justify-center cursor-pointer"
@@ -66,7 +66,10 @@ export function ChatSidebar() {
           </Link>
           <Button
             className="my-4 mx-3 rounded-xl"
-            onClick={handleNewChat}
+            onClick={() => {
+              setOpenMobile(false);
+              handleNewChat();
+            }}
           >
             New Chat
           </Button>
@@ -103,7 +106,10 @@ export function ChatSidebar() {
                           "p-5 cursor-pointer hover:bg-neutral-900",
                           conv.id === selectedConversation && "bg-neutral-900",
                         )}
-                        onClick={() => setSelectedConversation(conv.id)}
+                        onClick={() => {
+                          setOpenMobile(false);
+                          setSelectedConversation(conv.id);
+                        }}
                       >
                         <span>{conv.title.text}</span>
                       </SidebarMenuButton>
@@ -121,6 +127,7 @@ export function ChatSidebar() {
                           <DropdownMenuItem
                             className="cursor-pointer"
                             onClick={() => {
+                              setOpenMobile(false);
                               toast("Not Available Yet", {
                                 description: "Feature coming soon...",
                               });
@@ -130,7 +137,10 @@ export function ChatSidebar() {
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             className="cursor-pointer"
-                            onClick={() => handleDeleteChat(conv.id)}
+                            onClick={() => {
+                              setOpenMobile(false);
+                              handleDeleteChat(conv.id)
+                            }}
                           >
                             <span>Delete Chat</span>
                           </DropdownMenuItem>
