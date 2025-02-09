@@ -12,8 +12,8 @@ type ChatContextProps = {
   conversationList: ConversationMetadata[];
   selectedConversation: string;
   setSelectedConversation: React.Dispatch<React.SetStateAction<string>>;
-  conversation: Conversation;
-  setConversation: React.Dispatch<React.SetStateAction<Conversation>>;
+  conversation: Conversation | null;
+  setConversation: React.Dispatch<React.SetStateAction<Conversation | null>>;
   message: string;
   setMessage: React.Dispatch<React.SetStateAction<string>>;
   files: File[];
@@ -46,7 +46,7 @@ export default function ChatContextProvider({ children }: { children: React.Reac
 
   const [conversationList, setConversationList] = useState<ConversationMetadata[]>([]);
   const [selectedConversation, setSelectedConversation] = useState<string>("");
-  const [conversation, setConversation] = useState<Conversation>({} as Conversation);
+  const [conversation, setConversation] = useState<Conversation | null>({} as Conversation);
   const [message, setMessage] = useState("");
   const [files, setFiles] = useState<File[]>([]);
   const streaming = useRef(false);
@@ -86,7 +86,13 @@ export default function ChatContextProvider({ children }: { children: React.Reac
     });
   };
 
+  const focusTextarea = async () => {
+    await new Promise(resolve => setTimeout(resolve, 300));
+    textareaRef.current?.focus();
+  }
+
   const handleNewChat = async () => {
+    focusTextarea();
     const prevNew = conversationList.find((conv) => conv.title.updated === false);
     if (prevNew) {
       toast.error("New chat already exists");
@@ -107,6 +113,7 @@ export default function ChatContextProvider({ children }: { children: React.Reac
   };
 
   const handleDeleteChat = async (convId: string) => {
+    focusTextarea();
     toast.promise(deleteConversation(convId, user.id), {
       loading: "Deleting chat...",
       success: async (data) => {
@@ -188,22 +195,19 @@ export default function ChatContextProvider({ children }: { children: React.Reac
   }, []);
 
   useEffect(() => {
+    setConversation(null);
     abortControllerRef.current?.abort();
     conversationList.forEach(async (conv: any) => {
       if (conv.id === selectedConversation) {
         const res = await (await fetchConversation(conv.id)).json();
         if (res.success) {
           setConversation(res.data);
+          if (selectedConversation !== "") setMessageLoading(true);
         }
       }
     });
-    const focusTextarea = async () => {
-      await new Promise(resolve => setTimeout(resolve, 300));
-      textareaRef.current?.focus();
-    }
     router.push(`/chat/${selectedConversation}`);
     focusTextarea();
-    if (selectedConversation !== "") setMessageLoading(true);
   }, [selectedConversation]);
 
   return (

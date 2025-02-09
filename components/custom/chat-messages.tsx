@@ -6,8 +6,9 @@ import { useChatContext } from "@/contexts/chat";
 import { useParams, useRouter } from "next/navigation";
 import MarkdownRender from "./markdown-render";
 import { Skeleton } from "@/components/ui/skeleton";
+import { ChatNew } from "./chat-new";
 
-export function ChatPage() {
+export function ChatMessages() {
   const convId = useParams().id;
   const router = useRouter();
 
@@ -37,10 +38,12 @@ export function ChatPage() {
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  if (conversation?.messages?.length === 0) return <ChatNew />;
+
   return (
     <>
-      {messageLoading ? (
-        <div className="flex flex-col-reverse h-full p-[5%] items-center overflow-y-auto scroller gap-4 md:gap-0 mb-4 md:mb-0">      {/* Avatar Skeleton */}
+      {conversation && conversation.messages?.length > 0 && messageLoading ? (
+        <div className="flex flex-col-reverse h-full p-[5%] items-center overflow-y-auto scroller gap-4 md:gap-0 mb-4 md:mb-0">
           <div className="flex flex-row w-full max-w-[700px] gap-2 md:gap-4">
             <Skeleton className="bg-gray-600 w-[50px] h-[50px] rounded-full" />
             <div className="w-[80%] space-y-3">
