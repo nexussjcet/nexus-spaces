@@ -54,6 +54,8 @@ export default function ChatContextProvider({ children }: { children: React.Reac
   const [messageLoading, setMessageLoading] = useState(true);
   const textareaRef = useRef<HTMLInputElement>(null);
 
+  const abortControllerRef = useRef<AbortController | null>(null);
+
   const updateConversationList = async () => {
     const res = await (await fetchAllConversation(user.id)).json();
     if (res.success) {
@@ -137,7 +139,7 @@ export default function ChatContextProvider({ children }: { children: React.Reac
     if (!selectedConversation || !message.trim()) {
       return;
     }
-
+    abortControllerRef.current = new AbortController();
     const chatId = `user-${Date.now().toString()}`;
     const userMessage: Message = {
       id: chatId,
@@ -165,6 +167,9 @@ export default function ChatContextProvider({ children }: { children: React.Reac
         } else {
           toast.error("Internal server error");
         }
+        if (abortControllerRef.current.signal.aborted) {
+          break;
+        }
       }
       streaming.current = false;
     } catch (error) {
@@ -174,6 +179,7 @@ export default function ChatContextProvider({ children }: { children: React.Reac
     if (!conversationList[0].title.updated) {
       updateConversationList();
     }
+    abortControllerRef.current = null;
   };
 
   useEffect(() => {
@@ -182,6 +188,7 @@ export default function ChatContextProvider({ children }: { children: React.Reac
   }, []);
 
   useEffect(() => {
+    abortControllerRef.current?.abort();
     conversationList.forEach(async (conv: any) => {
       if (conv.id === selectedConversation) {
         const res = await (await fetchConversation(conv.id)).json();
