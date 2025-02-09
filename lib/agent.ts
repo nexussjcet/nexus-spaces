@@ -97,10 +97,10 @@ export async function* streamAIResponse(
 
   for await (const chunk of aiResponse.fullStream) {
     if (chunk.type === "text-delta") {
-      yield { type: "text", text: chunk.textDelta, streaming: false };
+      yield { type: "text", text: chunk.textDelta, streaming: true };
     }
     if (chunk.type === "finish") {
-      yield { type: "text", text: "", streaming: true }
+      yield { type: "text", text: "", streaming: false };
     }
   }
 }

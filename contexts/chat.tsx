@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { Conversation, ConversationMetadata, Message } from '@/types';
-import { useState, createContext, useContext, useEffect, useRef } from 'react'
+import { useState, createContext, useContext, useEffect, useRef, use } from 'react'
 import { useSession } from "next-auth/react";
 import { toast } from "sonner"
 import { fetchAllConversation, fetchConversation, initConversation, deleteConversation, sendMessage } from '@/lib/handler';
@@ -19,6 +19,10 @@ type ChatContextProps = {
   files: File[];
   setFiles: React.Dispatch<React.SetStateAction<File[]>>;
   streaming: React.RefObject<boolean>;
+  sidebarLoading: boolean;
+  setSidebarLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  messageLoading: boolean;
+  setMessageLoading: React.Dispatch<React.SetStateAction<boolean>>;
   handleNewChat: () => Promise<void>;
   handleDeleteChat: (convId: string) => Promise<void>;
   handleKeyDown: (e: React.KeyboardEvent) => void;
@@ -46,7 +50,8 @@ export default function ChatContextProvider({ children }: { children: React.Reac
   const [message, setMessage] = useState("");
   const [files, setFiles] = useState<File[]>([]);
   const streaming = useRef(false);
-
+  const [sidebarLoading, setSidebarLoading] = useState(true);
+  const [messageLoading, setMessageLoading] = useState(true);
   const textareaRef = useRef<HTMLInputElement>(null);
 
   const updateConversationList = async () => {
@@ -99,15 +104,15 @@ export default function ChatContextProvider({ children }: { children: React.Reac
       success: async (data) => {
         const res = await data.json();
         if (res.success) {
-          if (selectedConversation === res.data.id) {
-            setSelectedConversation("");
-          }
+          await new Promise((resolve) => setTimeout(resolve, 500));
+          if (selectedConversation === convId) setSelectedConversation("");
+          updateConversationList();
+          return "Chat deleted successfully";
+        } else {
+          throw new Error("Failed to delete chat");
         }
-        await new Promise((resolve) => setTimeout(resolve, 700));
-        updateConversationList();
-        return "Chat deleted successfully";
       },
-      error: 'Error occurred',
+      error: "Failed to delete chat",
     });
   };
 
@@ -142,15 +147,20 @@ export default function ChatContextProvider({ children }: { children: React.Reac
     let responseText = "";
     try {
       for await (const chunk of response) {
-        responseText += chunk.data;
-        const assistantMessage: Message = {
-          id: chunk.id,
-          content: { text: responseText },
-          isUser: false
-        };
-        updateConversation(assistantMessage);
-        streaming.current = chunk.streaming; // Set streaming status
+        if (chunk?.success) {
+          responseText += chunk.data;
+          const assistantMessage: Message = {
+            id: chunk.id,
+            content: { text: responseText },
+            isUser: false
+          };
+          updateConversation(assistantMessage);
+          streaming.current = true;
+        } else {
+          toast.error("Internal server error");
+        }
       }
+      streaming.current = false;
     } catch (error) {
       console.error('Error processing response:', error);
     }
@@ -162,6 +172,7 @@ export default function ChatContextProvider({ children }: { children: React.Reac
 
   useEffect(() => {
     updateConversationList();
+    setSidebarLoading(true);
   }, []);
 
   useEffect(() => {
@@ -173,8 +184,13 @@ export default function ChatContextProvider({ children }: { children: React.Reac
         }
       }
     });
+    const focusTextarea = async () => {
+      await new Promise(resolve => setTimeout(resolve, 300));
+      textareaRef.current?.focus();
+    }
     router.push(`/chat/${selectedConversation}`);
-    textareaRef.current?.focus();
+    focusTextarea();
+    if (selectedConversation !== "") setMessageLoading(true);
   }, [selectedConversation]);
 
   return (
@@ -191,6 +207,10 @@ export default function ChatContextProvider({ children }: { children: React.Reac
         files,
         setFiles,
         streaming,
+        sidebarLoading,
+        setSidebarLoading,
+        messageLoading,
+        setMessageLoading,
         handleNewChat,
         handleDeleteChat,
         handleKeyDown,

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import { fetchConversation } from "@/lib/handler";
 import { useChatContext } from "@/contexts/chat";
@@ -10,12 +10,13 @@ import { Skeleton } from "@/components/ui/skeleton";
 export function ChatPage() {
   const convId = useParams().id;
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
 
   const {
     setSelectedConversation,
     conversation,
     setConversation,
+    messageLoading,
+    setMessageLoading,
   } = useChatContext();
 
   useEffect(() => {
@@ -24,7 +25,7 @@ export function ChatPage() {
       if (res.success) {
         setConversation(res.data);
         setTimeout(() => {
-          setLoading(false);
+          setMessageLoading(false);
         }, 500);
       } else {
         router.push("/chat");
@@ -38,7 +39,7 @@ export function ChatPage() {
 
   return (
     <>
-      {loading ? (
+      {messageLoading ? (
         <div className="flex flex-col-reverse h-full p-[5%] items-center overflow-y-auto scroller gap-4 md:gap-0 mb-4 md:mb-0">      {/* Avatar Skeleton */}
           <div className="flex flex-row w-full max-w-[700px] gap-2 md:gap-4">
             <Skeleton className="bg-gray-600 w-[50px] h-[50px] rounded-full" />
@@ -53,7 +54,7 @@ export function ChatPage() {
           </div>
           <div className="flex flex-row w-full max-w-[700px] gap-2 md:gap-4 mb-[5%]">
             <div className="w-[80%] space-y-3">
-            <Skeleton className="bg-gray-600 h-[2vh] w-[90%] ml-[10%]" />
+              <Skeleton className="bg-gray-600 h-[2vh] w-[90%] ml-[10%]" />
               <Skeleton className="bg-gray-600 h-[2vh] w-[90%] ml-[10%]" />
               <Skeleton className="bg-gray-600 h-[2vh] w-[80%] ml-[20%]" />
             </div>
