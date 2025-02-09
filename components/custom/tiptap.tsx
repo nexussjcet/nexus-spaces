@@ -5,6 +5,7 @@ import CodeBlock from "@tiptap/extension-code-block";
 import Heading from "@tiptap/extension-heading";
 import Image from "@tiptap/extension-image";
 import Link from "@tiptap/extension-link";
+import Underline from "@tiptap/extension-underline";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Toolbar from "./toolbar";
@@ -49,8 +50,9 @@ export default function Tiptap({
         linkOnPaste: true,
       }),
       Image,
-      Blockquote, // Add Blockquote extension
-      CodeBlock, // Add CodeBlock extension
+      Blockquote,
+      CodeBlock,
+      Underline,
     ],
     content: description,
     editorProps: {
