@@ -3,6 +3,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import React from "react";
 import { Button } from "@/components/ui/button";
+import { ProfileEmbed } from "./profile-embed";
 
 const MarkdownRenderer = ({ children }: { children: React.ReactNode }) => {
   const markdownContent = typeof children === 'string'
@@ -65,6 +66,30 @@ const MarkdownRenderer = ({ children }: { children: React.ReactNode }) => {
               {props.children}
             </div>
           );
+        },
+        div(props) {
+          const { children } = props;
+          const match = /(?<=<users>)[\s\S]+(?=<\/users>)/.exec(children as string);
+          if (match) {
+            console.log(match);
+            const users = JSON.parse(match[0].trim());
+            return (
+              <div className="flex flex-row gap-3">
+                {users.map((user: any, index: number) => (
+                  <ProfileEmbed
+                    key={index}
+                    imageUrl={user.image}
+                    name={user.name}
+                    email={user.email}
+                    bio={user.bio}
+                  />
+                ))}
+              </div>
+            );
+          }
+          return <div className="w-full overflow-x-auto">
+            {props.children}
+          </div>;
         }
       }}
       className="break-words w-full"

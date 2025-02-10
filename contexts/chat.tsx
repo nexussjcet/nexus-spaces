@@ -65,6 +65,7 @@ export default function ChatContextProvider({ children }: { children: React.Reac
 
   const updateConversationList = async () => {
     const res = await (await fetchAllConversation(user.id)).json();
+    console.log(res);
     if (res.success) {
       const convList = res.data;
       convList.sort((a: ConversationMetadata, b: ConversationMetadata) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());

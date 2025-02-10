@@ -1,6 +1,7 @@
 "use server";
 import { updateUser } from "@/lib/db/models/users";
 import { revalidatePath } from "next/cache";
+import { generateEmbeddings } from "@/lib/embeddings";
 
 export async function updateBio(formData: FormData) {
   try {
@@ -14,6 +15,7 @@ export async function updateBio(formData: FormData) {
     const updatedUser = await updateUser({
       id: id as string,
       bio: bio as string,
+      embeddings: await generateEmbeddings(bio as string)
     });
 
     if (!updatedUser) {

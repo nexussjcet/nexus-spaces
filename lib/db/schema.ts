@@ -6,6 +6,7 @@ import {
   primaryKey,
   integer,
   json,
+  vector
 } from "drizzle-orm/pg-core";
 import type { AdapterAccountType } from "next-auth/adapters";
 
@@ -20,6 +21,9 @@ export const users = pgTable("user", {
   bio: text(),
   topLanguages: text("top_languages").default("[]").$type<string>(),
   topRepositories: text("top_repositories").default("[]").$type<string>(),
+  embeddings: vector({
+    dimensions: 768
+  })
 });
 
 export const accounts = pgTable(
