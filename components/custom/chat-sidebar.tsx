@@ -44,7 +44,9 @@ export function ChatSidebar() {
         setSidebarLoading(false);
       }, 500);
     };
-    loadConversations();
+    if(sidebarLoading){
+      loadConversations();
+    }
   }, [sidebarLoading]);
 
   return (
