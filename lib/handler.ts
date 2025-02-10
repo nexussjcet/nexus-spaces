@@ -4,7 +4,6 @@ import { fetchEventSource } from '@microsoft/fetch-event-source';
 import type { SSEChunk } from '../types';
 
 export const initConversation = async (user: { id: string }) => {
-  console.log(user.id)
   const convId = uuid4();
   return await fetch(`/api/chat/${convId}?action=create`, {
     method: "POST",
