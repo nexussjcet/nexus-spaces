@@ -1,8 +1,9 @@
 "use client";
 import { useChatContext } from "@/contexts/chat";
-import { Send, File } from "lucide-react";
+import { Send, File, CircleStop } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 export function ChatInput() {
   const {
@@ -11,10 +12,14 @@ export function ChatInput() {
     setMessage,
     files,
     setFiles,
+    streaming,
+    setStreaming,
+    abortControllerRef,
+    stopControllerRef,
     handleKeyDown,
     handleSubmit,
   } = useChatContext();
-  
+
   return (
     <div
       className="flex flex-col w-full h-fit gap-2 border border-neutral-800 rounded-lg p-4 bg-neutral-950"
@@ -28,14 +33,32 @@ export function ChatInput() {
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           onKeyDown={handleKeyDown}
+          disabled={streaming}
         />
-        <Button
+        {!streaming ? (
+          <Button
           className="w-fit flex gap-2 rounded-md"
+          title="Send"
           onClick={handleSubmit}
-        >
-          <Send className="h-4 w-4" />
-          Send
-        </Button>
+          >
+            <Send className="h-4 w-4" />
+
+          </Button>
+        ) : (
+          <Button
+            className="w-fit flex gap-2 rounded-md"
+            title="Stop"
+            onClick={() => {
+              abortControllerRef.current?.abort();
+              stopControllerRef.current?.abort();
+              toast.error("Stopped streaming");
+              setStreaming(false);
+            }}
+          >
+            <CircleStop className="h-4 w-4" />
+          </Button>
+        )}
+
       </div>
       <div className="flex items-center gap-2 text-sm text-neutral-400">
         <label htmlFor="file-upload" className="flex items-center gap-2 cursor-pointer hover:text-neutral-300 mx-2 my-1">
@@ -50,6 +73,6 @@ export function ChatInput() {
           multiple
         />
       </div>
-    </div>
+    </div >
   );
 }

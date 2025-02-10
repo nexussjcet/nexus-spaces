@@ -38,7 +38,7 @@ export const fetchAllConversation = async (userId: string) => {
   return await fetch(`/api/user/${userId}?action=get-conversations`);
 }
 
-export async function* sendMessage(convId: string, chatId: string, message: string, files: File[]) {
+export async function* sendMessage(convId: string, chatId: string, message: string, files: File[], abortController: AbortController) {
   let done = false;
   let id: string = "";
   const queue: SSEChunk[] = [];
@@ -74,6 +74,7 @@ export async function* sendMessage(convId: string, chatId: string, message: stri
         },
       },
     }),
+    signal: abortController.signal,
     openWhenHidden: true,
     onmessage: (e) => {
       switch (e.event) {
