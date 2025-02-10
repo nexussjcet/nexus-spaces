@@ -1,6 +1,8 @@
 import { createGroq } from "@ai-sdk/groq";
-import { CoreMessage, generateText, streamText } from "ai";
+import { CoreMessage, generateText, streamText, tool } from "ai";
 import { getConversation, updateTitle } from "./db/models/conversations";
+import { z } from "zod";
+import { getSimilarUsers } from "./db/models/users";
 
 const groq = createGroq({ apiKey: process.env.GROQ_API_KEY });
 
@@ -39,6 +41,19 @@ export async function* streamAIResponse(
     Key Requirements:
     1. Generate short and to the point responses.
     2. Answer questions directly and in a way that is easy to understand.
+    3. If the user asks about a user or wants to find other users, use the findSimilarProfiles tool. Enclose each user in <user></user> tags.
+    4. NEVER SHOW MORE USERS THAN WHAT THE TOOL CALL RETURNS
+
+    Definition of <user>:
+    Anytime you generate a user based on the findSimilarProfiles tool, ensure it follows this format:
+    <user>
+    {
+      "name": "username",
+      "email": "user email",
+      "image": "user image"
+      "bio": "user bio"
+    }
+    </user>
     `;
 
   const messages: CoreMessage[] = [];
@@ -88,6 +103,21 @@ export async function* streamAIResponse(
     model,
     system,
     messages,
+    tools: {
+      findSimilarProfiles: tool({
+        description: "This tool is used to find the most similar profiles for a given search query",
+        parameters: z.object({
+          search: z.string().describe("A search string used to find the most relevant profiles. Can be a word or a sentence.")
+        }),
+        execute: async ({search}) => {
+          console.log("finding users")
+          const users = await getSimilarUsers(search);
+          console.log(users)
+          return JSON.stringify(users)
+        }
+      })
+    },
+    maxSteps: 2
   });
 
   // Generates a title

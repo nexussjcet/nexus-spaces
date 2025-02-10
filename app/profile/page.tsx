@@ -90,13 +90,13 @@ export default async function Profile() {
                   required
                   className="rounded-xl bg-neutral-900 border-neutral-800 resize-none"
                 />
+                <Button
+                  type="submit"
+                  className="font-semibold mt-2 rounded-lg"
+                >
+                  Update Bio
+                </Button>
               </form>
-              <Button
-                type="submit"
-                className="font-semibold mt-2 rounded-lg"
-              >
-                Update Bio
-              </Button>
             </div>
           </div>
 
