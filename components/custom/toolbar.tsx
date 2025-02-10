@@ -113,7 +113,7 @@ export default function Toolbar({ editor }: { editor: Editor | null }) {
 
       {/* Image */}
       <button onClick={addImage} className="p-2 rounded-lg hover:bg-gray-200">
-        <Image size={18} className="text-black" />
+        <Image size={18} className="text-black"/>
       </button>
 
       {/* Quote */}

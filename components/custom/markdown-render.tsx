@@ -75,7 +75,7 @@ const MarkdownRenderer = ({ children }: { children: React.ReactNode }) => {
             const users = JSON.parse(match[0].trim());
             return (
               <div className="flex flex-row gap-3">
-                {users.map((user: any, index: number) => (
+                {users.map((user: {image: string, name: string, email: string, bio: string}, index: number) => (
                   <ProfileEmbed
                     key={index}
                     imageUrl={user.image}
