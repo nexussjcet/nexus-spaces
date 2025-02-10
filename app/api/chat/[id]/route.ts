@@ -79,18 +79,19 @@ export async function POST(
             controller.enqueue(new TextEncoder().encode(`event: json-delta\ndata: ${response}\n\n`));
           }
           controller.enqueue(new TextEncoder().encode(`event: stop\ndata: [DONE]\n\n`));
-          // Add assistant messages to db
-          await addMessage(id, {
-            id: chatId,
-            content: { text: data },
-            isUser: false,
-          });
           controller.close();
         } catch (error) {
           controller.error(error);
         }
+        // Add assistant messages to db
+        await addMessage(id, {
+          id: chatId,
+          content: { text: data },
+          isUser: false,
+        });
       },
     });
+
     return new Response(stream, {
       headers: {
         'Content-Type': 'text/event-stream; charset=utf-8',

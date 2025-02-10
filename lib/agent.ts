@@ -45,7 +45,7 @@ export async function* streamAIResponse(
 
   // Pass previous messages to model
   const prevMessages = await getConversation(convId);
-  await Promise.all(prevMessages.messages.map(async (item) => {
+  for await (const item of prevMessages.messages) {
     if (item.isUser) {
       messages.push({
         role: "user",
@@ -68,7 +68,7 @@ export async function* streamAIResponse(
         ]
       } as CoreMessage);
     }
-  }));
+  };
 
   // Pass current messages to model
   const message = {

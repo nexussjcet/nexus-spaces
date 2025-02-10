@@ -14,12 +14,12 @@ export function ChatHome() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3 }}
-          className="flex flex-col items-center justify-between h-full text-white"
+          className="flex flex-col items-center justify-between text-white h-full"
         >
           <div className="mt-[5%] w-full max-w-4xl space-y-16">
             <div className="text-center space-y-4">
-              <h1 className="text-5xl font-bold tracking-tight">Welcome to Nexus Spaces</h1>
-              <p className="text-xl text-zinc-400">Unlock your potential, connect with creators and build together</p>
+              <h1 className="text-3xl md:text-5xl font-bold tracking-tight">Welcome to Nexus Spaces</h1>
+              <p className="text-xl p-2 text-zinc-400">Unlock your potential, connect with creators and build together</p>
             </div>
             <div className="flex justify-center">
               <Button
@@ -32,7 +32,7 @@ export function ChatHome() {
                 Start a New Chat
               </Button>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 px-4">
               <FeatureCard
                 icon={Zap}
                 title="Lightning Fast"
@@ -55,7 +55,7 @@ export function ChatHome() {
               />
             </div>
           </div>
-          <div className="mt-[5%] text-center text-zinc-500 text-sm">
+          <div className="mt-[8%] md:mt-[5%] my-2 text-center text-zinc-500 text-sm">
             <p>© 2025 Nexus Spaces | Made by <a href="https://nexus.sjcetpalai.ac.in/" target="_blank"><u>The Nexus Project</u></a></p>
           </div>
         </motion.div>
