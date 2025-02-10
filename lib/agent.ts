@@ -41,19 +41,15 @@ export async function* streamAIResponse(
     Key Requirements:
     1. Generate short and to the point responses.
     2. Answer questions directly and in a way that is easy to understand.
-    3. If the user asks about a user or wants to find other users, use the findSimilarProfiles tool. Enclose each user in <user></user> tags.
+    3. If the user asks about a user or wants to find other users, use the findSimilarProfiles tool. Enclose all the users in an array within <users></users> tags.
     4. NEVER SHOW MORE USERS THAN WHAT THE TOOL CALL RETURNS
+    5. Ensure the <users></users> tag is placed at the end.
 
     Definition of <user>:
     Anytime you generate a user based on the findSimilarProfiles tool, ensure it follows this format:
-    <user>
-    {
-      "name": "username",
-      "email": "user email",
-      "image": "user image"
-      "bio": "user bio"
-    }
-    </user>
+    <users>
+    [{"name": "username", "email": "user email", "image": "user image", "bio": "user bio"}, {"name": "username", "email": "user email", "image": "user image", "bio": "user bio"}]
+    </users>
     `;
 
   const messages: CoreMessage[] = [];
