@@ -6,7 +6,7 @@ import { SessionProvider } from "next-auth/react";
 
 export function QueryProvider({ children, session }: { children: React.ReactNode, session: Session | null }) {
   return (
-    <SessionProvider session={session}>
+    <SessionProvider session={session} refetchOnWindowFocus={false}>
       <QueryClientProvider client={new QueryClient()}>
         {children}
       </QueryClientProvider>

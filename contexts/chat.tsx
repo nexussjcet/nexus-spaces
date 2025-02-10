@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { Conversation, ConversationMetadata, Message } from '@/types';
-import { useState, createContext, useContext, useEffect, useRef, use } from 'react'
+import { useState, createContext, useContext, useEffect, useRef } from 'react'
 import { useSession } from "next-auth/react";
 import { toast } from "sonner"
 import { fetchAllConversation, fetchConversation, initConversation, deleteConversation, sendMessage } from '@/lib/handler';
@@ -47,8 +47,8 @@ export default function ChatContextProvider({ children }: { children: React.Reac
   } else {
     return (<>{children}</>);
   }
-  const router = useRouter();
 
+  const router = useRouter()
   const [conversationList, setConversationList] = useState<ConversationMetadata[]>([]);
   const [selectedConversation, setSelectedConversation] = useState<string>("");
   const [conversation, setConversation] = useState<Conversation | null>({} as Conversation);
@@ -65,7 +65,6 @@ export default function ChatContextProvider({ children }: { children: React.Reac
 
   const updateConversationList = async () => {
     const res = await (await fetchAllConversation(user.id)).json();
-    console.log(res);
     if (res.success) {
       const convList = res.data;
       convList.sort((a: ConversationMetadata, b: ConversationMetadata) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
@@ -104,7 +103,7 @@ export default function ChatContextProvider({ children }: { children: React.Reac
     focusTextarea();
     const prevNew = conversationList.find((conv) => conv.title.updated === false);
     if (prevNew) {
-      toast.error("New chat already exists");
+      toast.info("Already on new chat");
       setSelectedConversation(prevNew.id);
       return;
     }

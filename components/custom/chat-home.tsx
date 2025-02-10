@@ -14,11 +14,11 @@ export function ChatHome() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3 }}
-          className="flex flex-col items-center justify-between text-white h-full"
+          className="flex flex-col items-center justify-between h-screen overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent"
         >
           <div className="mt-[5%] w-full max-w-4xl space-y-16">
             <div className="text-center space-y-4">
-              <h1 className="text-3xl md:text-5xl font-bold tracking-tight">Welcome to Nexus Spaces</h1>
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight">Welcome to Nexus Spaces</h1>
               <p className="text-xl p-2 text-zinc-400">Unlock your potential, connect with creators and build together</p>
             </div>
             <div className="flex justify-center">

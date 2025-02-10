@@ -45,7 +45,7 @@ export function ChatMessages() {
   return (
     <>
       {conversation && conversation.messages?.length > 0 && messageLoading ? (
-        <div className="flex flex-col-reverse h-full p-[5%] items-center gap-4 md:gap-0 mb-4 md:mb-0 overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent">
+        <div className="flex flex-col-reverse h-screen p-[5%] items-center gap-4 md:gap-0 mb-4 md:mb-0 overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent">
           <div className="flex flex-row w-full max-w-[700px] gap-2 md:gap-4">
             <Skeleton className="bg-gray-600 w-[50px] h-[50px] rounded-full" />
             <div className="w-[80%] space-y-3">
@@ -78,7 +78,7 @@ export function ChatMessages() {
           </div>
         </div>
       ) : (
-        <div className="flex flex-col-reverse gap-4 h-full p-4 md:px-16 items-center overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent">
+        <div className="flex flex-col-reverse h-screen gap-4 p-4 md:px-16 items-center overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent">
           {conversation?.messages?.toReversed().map((chatMessage) => (
             <div
               className={`flex flex-col w-full max-w-[700px] ${chatMessage.isUser ? 'items-end' : ''}`}
