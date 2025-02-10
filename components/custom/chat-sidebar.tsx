@@ -51,7 +51,7 @@ export function ChatSidebar() {
 
   return (
     <>
-      <Sidebar className="bg-black border-solid border-neutral-800">
+      <Sidebar className="h-full bg-black border-solid border-neutral-800">
         <SidebarHeader>
           <Link
             href="/chat"

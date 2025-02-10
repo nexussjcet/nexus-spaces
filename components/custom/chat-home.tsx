@@ -14,7 +14,7 @@ export function ChatHome() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3 }}
-          className="flex flex-col items-center justify-between h-full"
+          className="flex flex-col items-center justify-between h-screen overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent"
         >
           <div className="mt-[5%] w-full max-w-4xl space-y-16">
             <div className="text-center space-y-4">

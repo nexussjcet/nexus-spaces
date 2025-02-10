@@ -103,7 +103,7 @@ export default function ChatContextProvider({ children }: { children: React.Reac
     focusTextarea();
     const prevNew = conversationList.find((conv) => conv.title.updated === false);
     if (prevNew) {
-      toast.error("New chat already exists");
+      toast.info("Already on new chat");
       setSelectedConversation(prevNew.id);
       return;
     }
