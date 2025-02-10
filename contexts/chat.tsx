@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { Conversation, ConversationMetadata, Message } from '@/types';
-import { useState, createContext, useContext, useEffect, useRef, use } from 'react'
+import { useState, createContext, useContext, useEffect, useRef } from 'react'
 import { useSession } from "next-auth/react";
 import { toast } from "sonner"
 import { fetchAllConversation, fetchConversation, initConversation, deleteConversation, sendMessage } from '@/lib/handler';

@@ -22,7 +22,7 @@ export function ChatInput() {
 
   return (
     <div
-      className="flex flex-col w-full h-fit gap-2 border border-neutral-800 rounded-lg p-4 bg-neutral-950"
+      className="flex flex-col w-full h-fit mb-6 md:mb-0 gap-2 border-t-2 border-neutral-800 p-4 bg-neutral-950"
     >
       <div className="flex flex-row items-center gap-2">
         <Input
