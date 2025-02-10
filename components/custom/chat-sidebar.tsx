@@ -74,7 +74,7 @@ export function ChatSidebar() {
             New Chat
           </Button>
         </SidebarHeader>
-        <SidebarContent>
+        <SidebarContent className="scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent">
           {sidebarLoading ? (
             <div className="flex flex-col justify-center mt-3 ml-5 gap-5">
               <Skeleton className="bg-gray-600 h-[15px] w-[80%]" />

@@ -43,7 +43,7 @@ export function ChatNew() {
 
   return (
     <div className="bg-black text-white flex items-center justify-center h-full">
-      <h1 className="text-4xl font-bold">
+      <h1 className="text-2xl md:text-4xl font-bold">
         <motion.span className="inline">{displayText}</motion.span>
         <motion.span
           className="ml-1"
