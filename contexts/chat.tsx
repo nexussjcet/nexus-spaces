@@ -94,13 +94,7 @@ export default function ChatContextProvider({ children }: { children: React.Reac
     });
   };
 
-  const focusTextarea = async () => {
-    await new Promise(resolve => setTimeout(resolve, 300));
-    textareaRef.current?.focus();
-  }
-
   const handleNewChat = async () => {
-    focusTextarea();
     const prevNew = conversationList.find((conv) => conv.title.updated === false);
     if (prevNew) {
       toast.info("Already on new chat");
@@ -121,7 +115,6 @@ export default function ChatContextProvider({ children }: { children: React.Reac
   };
 
   const handleDeleteChat = async (convId: string) => {
-    focusTextarea();
     toast.promise(deleteConversation(convId, user.id), {
       loading: "Deleting chat...",
       success: async (data) => {
@@ -198,7 +191,6 @@ export default function ChatContextProvider({ children }: { children: React.Reac
     }
     abortControllerRef.current = null;
     stopControllerRef.current = null;
-    focusTextarea();
   };
 
   useEffect(() => {
@@ -221,7 +213,6 @@ export default function ChatContextProvider({ children }: { children: React.Reac
       }
     });
     router.push(`/chat/${selectedConversation}`);
-    focusTextarea();
   }, [selectedConversation]);
 
   return (
