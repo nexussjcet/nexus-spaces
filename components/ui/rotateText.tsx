@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, {
     forwardRef,
     useCallback,
@@ -26,11 +27,9 @@ import React, {
     > {
     texts: string[];
     transition?: Transition;
-    /* eslint-disable @typescript-eslint/no-explicit-any */
     initial?: any;
     animate?: any;
     exit?: any;
-    /* eslint-enable @typescript-eslint/no-explicit-any */
     animatePresenceMode?: "sync" | "wait";
     animatePresenceInitial?: boolean;
     rotationInterval?: number;

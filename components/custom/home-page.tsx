@@ -29,17 +29,17 @@ export function HomePage() {
           </div>
           <SplitText
             text="Nexus Spaces"
-            className="text-5xl font-bold text-center"
+            className="text-3xl md:text-5xl font-bold text-center"
             delay={150}
             onLetterAnimationComplete={() => null}
           />
-          <div className="text-lg flex flex-col md:flex-row gap-2 items-center justify-center">
-            <p className="text-2xl font-semibold">
+          <div className="text-md md:text-lg flex flex-col md:flex-row gap-2 items-center justify-center">
+            <p className="text-lg md:text-2xl font-semibold">
           Nexus Spaces is a social media platform for 
           </p>
             <RotatingText
               texts={['developers', 'designers', 'skilled individuals']}
-              mainClassName=" text-lg pt-0.5 uppercase bg-slate-200/10 min-w-64 font-semibold text-white overflow-hidden justify-center rounded-lg"
+              mainClassName="text-md md:text-lg pt-0.5 uppercase bg-slate-200/10 min-w-64 font-semibold text-white overflow-hidden justify-center rounded-lg"
               staggerFrom={"last"}
               initial={{ y: "100%" }}
               animate={{ y: 0 }}
