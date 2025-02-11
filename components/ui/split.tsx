@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useSprings, animated, SpringConfig } from '@react-spring/web';
 import { useEffect, useRef, useState } from 'react';
 
@@ -13,6 +14,7 @@ interface SplitTextProps {
     textAlign?: 'left' | 'right' | 'center' | 'justify' | 'start' | 'end';
     onLetterAnimationComplete?: () => void;
 }
+const AnimatedSpan = animated.span as React.FC<{ children?: React.ReactNode; style?: React.CSSProperties }>;
 
 const SplitText: React.FC<SplitTextProps> = ({
     text = '',
@@ -57,7 +59,7 @@ const SplitText: React.FC<SplitTextProps> = ({
         letters.map((_, i) => ({
             from: animationFrom,
             to: inView
-                ? async (next: (props: Record<string, any>) => Promise<void>) => {
+                ? async (next: (props: any) => Promise<void>) => { // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     await next(animationTo);
                     animatedCount.current += 1;
                     if (animatedCount.current === letters.length && onLetterAnimationComplete) {
@@ -84,13 +86,9 @@ const SplitText: React.FC<SplitTextProps> = ({
                             .reduce((acc, w) => acc + w.length, 0) + letterIndex;
 
                         return (
-                            <animated.span
-                                key={index}
-                                style={springs[index] as unknown as React.CSSProperties}
-                                className="inline-block transform transition-opacity will-change-transform"
-                            >
-                                {letter}
-                            </animated.span>
+                            <AnimatedSpan key={index} style={springs[index] as any}>
+                            {letter}
+                        </AnimatedSpan>
                         );
                     })}
                     <span style={{ display: 'inline-block', width: '0.3em' }}>&nbsp;</span>

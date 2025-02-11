@@ -26,9 +26,11 @@ import React, {
     > {
     texts: string[];
     transition?: Transition;
-    initial?: Record<string, unknown>;
-    animate?: Record<string, unknown>;
-    exit?: Record<string, unknown>;
+    /* eslint-disable @typescript-eslint/no-explicit-any */
+    initial?: any;
+    animate?: any;
+    exit?: any;
+    /* eslint-enable @typescript-eslint/no-explicit-any */
     animatePresenceMode?: "sync" | "wait";
     animatePresenceInitial?: boolean;
     rotationInterval?: number;
