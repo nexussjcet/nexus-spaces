@@ -4,6 +4,7 @@ import { Send, File, CircleStop } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { useEffect } from "react";
 
 export function ChatInput() {
   const {
@@ -19,6 +20,10 @@ export function ChatInput() {
     handleKeyDown,
     handleSubmit,
   } = useChatContext();
+
+  useEffect(() => {
+    if (window.innerWidth >= 768) textareaRef.current?.focus();
+  }, []);
 
   return (
     <div
