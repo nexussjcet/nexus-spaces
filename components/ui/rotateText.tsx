@@ -26,9 +26,9 @@ import React, {
     > {
     texts: string[];
     transition?: Transition;
-    initial?: any;
-    animate?: any;
-    exit?: any;
+    initial?: Record<string, unknown>;
+    animate?: Record<string, unknown>;
+    exit?: Record<string, unknown>;
     animatePresenceMode?: "sync" | "wait";
     animatePresenceInitial?: boolean;
     rotationInterval?: number;
