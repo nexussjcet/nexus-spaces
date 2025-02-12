@@ -147,6 +147,7 @@ export default function ChatContextProvider({ children }: { children: React.Reac
     if (!selectedConversation || !message.trim()) {
       return;
     }
+    setStreaming(true);
     abortControllerRef.current = new AbortController();
     stopControllerRef.current = new AbortController();
     const chatId = `user-${Date.now().toString()}`;
@@ -191,6 +192,10 @@ export default function ChatContextProvider({ children }: { children: React.Reac
     }
     abortControllerRef.current = null;
     stopControllerRef.current = null;
+    if (window.innerWidth >= 768) {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      textareaRef.current?.focus();
+    }
   };
 
   useEffect(() => {
