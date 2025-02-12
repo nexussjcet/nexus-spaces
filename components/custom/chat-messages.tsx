@@ -78,7 +78,7 @@ export function ChatMessages() {
           </div>
         </div>
       ) : (
-        <div className="flex flex-col-reverse h-screen gap-4 p-4 md:px-16 items-center overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-transparent">
+        <div className="flex flex-col-reverse h-screen gap-4 p-4 md:px-16 items-center overflow-y-scroll scrollbar scrollbar-thumb-gray-700 scrollbar-track-transparent">
           {conversation?.messages?.toReversed().map((chatMessage) => (
             <div
               className={`flex flex-col w-full max-w-[700px] ${chatMessage.isUser ? 'items-end' : ''}`}
@@ -96,12 +96,12 @@ export function ChatMessages() {
                     />
                   </div>
                 )}
-                <div className={`flex flex-col ${chatMessage.isUser ? 'items-end' : ''}`}>
+                <div className={`flex flex-col max-w-2xl ${chatMessage.isUser ? 'items-end' : ''}`}>
                   <h3 className="font-bold text-neutral-400">
-                    {chatMessage.isUser ? "You" : "Spacey"}
+                    {!chatMessage.isUser && "Spacey"} 
                   </h3>
-                  <div className={`max-w-full ${chatMessage.isUser ? 'bg-white text-black rounded-xl px-4 py-2' : ''}`}>
-                    <MarkdownRender>{chatMessage.content.text}</MarkdownRender>
+                  <div className={`${chatMessage.isUser ? 'bg-white text-black rounded-xl px-4 py-2 mt-6' : ''}`}>
+                    <MarkdownRender content={chatMessage.content.text} />
                   </div>
                 </div>
               </div>

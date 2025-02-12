@@ -44,7 +44,7 @@ export function ChatSidebar() {
         setSidebarLoading(false);
       }, 500);
     };
-    if(sidebarLoading){
+    if (sidebarLoading) {
       loadConversations();
     }
   }, [sidebarLoading]);
@@ -113,7 +113,9 @@ export function ChatSidebar() {
                           setSelectedConversation(conv.id);
                         }}
                       >
-                        <span>{conv.title.text}</span>
+                        <div>
+                          <span className="text-ellipsis whitespace-nowrap">{conv.title.text}</span>
+                        </div>
                       </SidebarMenuButton>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild
