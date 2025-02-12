@@ -1,5 +1,6 @@
 "use client";
 
+import { useToast } from "@/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
@@ -19,6 +20,7 @@ import Tiptap from "./tiptap-dynamic";
 
 export default function TextEditor() {
   const { data: session } = useSession();
+  const { toast } = useToast();
 
   if (!session) {
     redirect("/signin");
@@ -45,7 +47,25 @@ export default function TextEditor() {
       return axios.post("/api/posts", newPost);
     },
     onSuccess: () => {
-      router.push("/posts");
+      toast({
+        title: "Success!",
+        description: "Your post has been published.",
+        variant: "default",
+      });
+      // Wait a brief moment for the toast to be visible before redirecting
+      setTimeout(() => {
+        router.push("/posts");
+      }, 1500);
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description:
+          error instanceof Error
+            ? error.message
+            : "Failed to publish post. Please try again.",
+        variant: "destructive",
+      });
     },
   });
 
@@ -92,9 +112,10 @@ export default function TextEditor() {
           />
           <button
             type="submit"
-            className="bg-blue-500 text-white px-4 py-2 rounded"
+            disabled={mutation.isPending}
+            className="bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Submit
+            {mutation.isPending ? "Publishing..." : "Submit"}
           </button>
         </form>
       </Form>
