@@ -22,7 +22,7 @@ const MarkdownRenderer = ({ content }) => {
     const language = match ? match[1].toUpperCase() : "TEXT";
     return (
       <pre className="bg-black rounded-lg border border-white my-5 max-w-2xl w-[80vw] md:w-[43vw] min-[790px]:w-[45vw] min-[864px]:w-[50vw] min-[980px]:w-[55vw]">
-        <div className="flex justify-between items-center p-2 bg-white text-black text-sm font-mono">
+        <div className="flex justify-between items-center p-2 bg-white text-black text-sm font-mono rounded-t-md">
           <span className="font-bold text-black">{language}</span>
           <div
             className="bg-white cursor-pointer transition-transform transform hover:scale-110"
