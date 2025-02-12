@@ -35,11 +35,10 @@ export default function Toolbar({ editor }: { editor: Editor | null }) {
     if (url === null) return;
 
     if (url === "") {
-      editor.chain().focus().unsetLink().run(); // Remove the link if the input is empty
+      editor.chain().focus().unsetLink().run();
       return;
     }
 
-    // If no text is selected, insert a new linked text
     if (!editor.state.selection.empty) {
       editor
         .chain()
@@ -57,80 +56,113 @@ export default function Toolbar({ editor }: { editor: Editor | null }) {
   };
 
   return (
-    <div className="w-full bg-white text-black shadow-md rounded-t-md p-2 border-b border-gray-200 flex gap-2">
-      {/* Text Formatting */}
-      <button
-        onClick={() => editor.chain().focus().toggleBold().run()}
-        className={`p-2 rounded-lg hover:bg-gray-200 ${editor.isActive("bold") ? "bg-gray-300" : ""}`}
-      >
-        <Bold size={18} className="text-black" />
-      </button>
-      <button
-        onClick={() => editor.chain().focus().toggleItalic().run()}
-        className={`p-2 rounded-lg hover:bg-gray-200 ${editor.isActive("italic") ? "bg-gray-300" : ""}`}
-      >
-        <Italic size={18} className="text-black" />
-      </button>
-      <button
-        onClick={() => editor.chain().focus().toggleUnderline().run()}
-        className={`p-2 rounded-lg hover:bg-gray-200 ${editor.isActive("underline") ? "bg-gray-300" : ""}`}
-      >
-        <UnderlineIcon size={18} className="text-black" />
-      </button>
+    <div className="relative w-full bg-white text-black rounded-t-md border-b border-gray-200">
+      <div className="overflow-x-auto scrollbar-hide">
+        <div className="flex gap-2 p-2 min-w-max">
+          {/* Text Formatting */}
+          <button
+            onClick={() => editor.chain().focus().toggleBold().run()}
+            className={`p-2 rounded-lg hover:bg-gray-200 ${
+              editor.isActive("bold") ? "bg-gray-300" : ""
+            }`}
+          >
+            <Bold size={18} className="text-black" />
+          </button>
+          <button
+            onClick={() => editor.chain().focus().toggleItalic().run()}
+            className={`p-2 rounded-lg hover:bg-gray-200 ${
+              editor.isActive("italic") ? "bg-gray-300" : ""
+            }`}
+          >
+            <Italic size={18} className="text-black" />
+          </button>
+          <button
+            onClick={() => editor.chain().focus().toggleUnderline().run()}
+            className={`p-2 rounded-lg hover:bg-gray-200 ${
+              editor.isActive("underline") ? "bg-gray-300" : ""
+            }`}
+          >
+            <UnderlineIcon size={18} className="text-black" />
+          </button>
 
-      {/* Headings */}
-      <button
-        onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-        className={`p-2 rounded-lg hover:bg-gray-200 ${editor.isActive("heading", { level: 1 }) ? "bg-gray-300" : ""}`}
-      >
-        <Heading1 size={18} className="text-black" />
-      </button>
-      <button
-        onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-        className={`p-2 rounded-lg hover:bg-gray-200 ${editor.isActive("heading", { level: 2 }) ? "bg-gray-300" : ""}`}
-      >
-        <Heading2 size={18} className="text-black" />
-      </button>
+          {/* Headings */}
+          <button
+            onClick={() =>
+              editor.chain().focus().toggleHeading({ level: 1 }).run()
+            }
+            className={`p-2 rounded-lg hover:bg-gray-200 ${
+              editor.isActive("heading", { level: 1 }) ? "bg-gray-300" : ""
+            }`}
+          >
+            <Heading1 size={18} className="text-black" />
+          </button>
+          <button
+            onClick={() =>
+              editor.chain().focus().toggleHeading({ level: 2 }).run()
+            }
+            className={`p-2 rounded-lg hover:bg-gray-200 ${
+              editor.isActive("heading", { level: 2 }) ? "bg-gray-300" : ""
+            }`}
+          >
+            <Heading2 size={18} className="text-black" />
+          </button>
 
-      {/* Lists */}
-      <button
-        onClick={() => editor.chain().focus().toggleBulletList().run()}
-        className={`p-2 rounded-lg hover:bg-gray-200 ${editor.isActive("bulletList") ? "bg-gray-300" : ""}`}
-      >
-        <List size={18} className="text-black" />
-      </button>
-      <button
-        onClick={() => editor.chain().focus().toggleOrderedList().run()}
-        className={`p-2 rounded-lg hover:bg-gray-200 ${editor.isActive("orderedList") ? "bg-gray-300" : ""}`}
-      >
-        <ListOrdered size={18} className="text-black" />
-      </button>
+          {/* Lists */}
+          <button
+            onClick={() => editor.chain().focus().toggleBulletList().run()}
+            className={`p-2 rounded-lg hover:bg-gray-200 ${
+              editor.isActive("bulletList") ? "bg-gray-300" : ""
+            }`}
+          >
+            <List size={18} className="text-black" />
+          </button>
+          <button
+            onClick={() => editor.chain().focus().toggleOrderedList().run()}
+            className={`p-2 rounded-lg hover:bg-gray-200 ${
+              editor.isActive("orderedList") ? "bg-gray-300" : ""
+            }`}
+          >
+            <ListOrdered size={18} className="text-black" />
+          </button>
 
-      {/* Link */}
-      <button onClick={addLink} className="p-2 rounded-lg hover:bg-gray-200">
-        <Link size={18} className="text-black" />
-      </button>
+          {/* Link */}
+          <button
+            onClick={addLink}
+            className="p-2 rounded-lg hover:bg-gray-200"
+          >
+            <Link size={18} className="text-black" />
+          </button>
 
-      {/* Image */}
-      <button onClick={addImage} className="p-2 rounded-lg hover:bg-gray-200">
-        <Image size={18} className="text-black"/>
-      </button>
+          {/* Image */}
+          <button
+            onClick={addImage}
+            className="p-2 rounded-lg hover:bg-gray-200"
+          >
+            <Image size={18} className="text-black" />
+          </button>
 
-      {/* Quote */}
-      <button
-        onClick={() => editor.chain().focus().toggleBlockquote().run()}
-        className={`p-2 rounded-lg hover:bg-gray-200 ${editor.isActive("blockquote") ? "bg-gray-300" : ""}`}
-      >
-        <Quote size={18} className="text-black" />
-      </button>
+          {/* Quote */}
+          <button
+            onClick={() => editor.chain().focus().toggleBlockquote().run()}
+            className={`p-2 rounded-lg hover:bg-gray-200 ${
+              editor.isActive("blockquote") ? "bg-gray-300" : ""
+            }`}
+          >
+            <Quote size={18} className="text-black" />
+          </button>
 
-      {/* Code Block */}
-      <button
-        onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-        className={`p-2 rounded-lg hover:bg-gray-200 ${editor.isActive("codeBlock") ? "bg-gray-300" : ""}`}
-      >
-        <Code size={18} className="text-black" />
-      </button>
+          {/* Code Block */}
+          <button
+            onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+            className={`p-2 rounded-lg hover:bg-gray-200 ${
+              editor.isActive("codeBlock") ? "bg-gray-300" : ""
+            }`}
+          >
+            <Code size={18} className="text-black" />
+          </button>
+        </div>
+      </div>
+      <div className="absolute right-0 top-0 bottom-0 pointer-events-none w-8 bg-gradient-to-l from-white to-transparent" />
     </div>
   );
 }

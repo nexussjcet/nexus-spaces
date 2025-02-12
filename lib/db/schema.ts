@@ -1,14 +1,27 @@
 import {
   boolean,
-  timestamp,
-  pgTable,
-  text,
-  primaryKey,
   integer,
   json,
-  vector
+  pgTable,
+  primaryKey,
+  text,
+  timestamp,
+  vector,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccountType } from "next-auth/adapters";
+
+export const posts = pgTable("posts", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  title: text("title").notNull(),
+  content: text("content").notNull(),
+  userId: text("userId")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  createdAt: timestamp("createdAt", { mode: "date" }).defaultNow(),
+  updatedAt: timestamp("updatedAt", { mode: "date" }).defaultNow(),
+});
 
 export const users = pgTable("user", {
   id: text("id")
@@ -22,8 +35,8 @@ export const users = pgTable("user", {
   topLanguages: text("top_languages").default("[]").$type<string>(),
   topRepositories: text("top_repositories").default("[]").$type<string>(),
   embeddings: vector({
-    dimensions: 768
-  })
+    dimensions: 768,
+  }),
 });
 
 export const accounts = pgTable(

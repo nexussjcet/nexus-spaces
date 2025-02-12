@@ -1,7 +1,8 @@
 import { auth } from "@/auth";
-import { Geist, Geist_Mono } from "next/font/google";
 import { QueryProvider } from "@/components/custom/query-provider";
+import { Toaster } from "@/components/ui/toaster";
 import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -34,6 +35,7 @@ export default async function RootLayout({
       >
         <QueryProvider session={session}>
           {children}
+          <Toaster />
         </QueryProvider>
       </body>
     </html>
