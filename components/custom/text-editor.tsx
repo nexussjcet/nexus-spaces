@@ -52,7 +52,6 @@ export default function TextEditor() {
         description: "Your post has been published.",
         variant: "default",
       });
-      // Wait a brief moment for the toast to be visible before redirecting
       setTimeout(() => {
         router.push("/posts");
       }, 1500);
@@ -74,51 +73,62 @@ export default function TextEditor() {
   }
 
   return (
-    <main className="p-24">
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <FormField
-            control={form.control}
-            name="title"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Title</FormLabel>
-                <FormControl>
-                  <input
-                    {...field}
-                    className="bg-transparent text-white w-full p-2 border border-gray-300 rounded-md"
-                    placeholder="Enter post title"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="content"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Content</FormLabel>
-                <FormControl>
-                  <Tiptap
-                    description="Enter your post content here"
-                    onChange={field.onChange}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <button
-            type="submit"
-            disabled={mutation.isPending}
-            className="bg-blue-500 text-white px-4 py-2 rounded disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {mutation.isPending ? "Publishing..." : "Submit"}
-          </button>
-        </form>
-      </Form>
-    </main>
+    <div className="container mx-auto px-4 py-8">
+      <div className="max-w-3xl mx-auto">
+        <h1 className="text-2xl sm:text-3xl font-bold mb-6">Create New Post</h1>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <FormField
+              control={form.control}
+              name="title"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-base sm:text-lg">Title</FormLabel>
+                  <FormControl>
+                    <input
+                      {...field}
+                      className="bg-transparent text-white w-full p-2 sm:p-3 border border-gray-300 rounded-md text-base sm:text-lg"
+                      placeholder="Enter post title"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="content"
+              render={({ field }) => (
+                <FormItem className="flex flex-col space-y-2">
+                  <FormLabel className="text-base sm:text-lg">
+                    Content
+                  </FormLabel>
+                  <FormControl>
+                    <div className="min-h-[300px] sm:min-h-[400px]">
+                      <Tiptap
+                        description="Enter your post content here"
+                        onChange={field.onChange}
+                      />
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <div className="sticky bottom-4 left-0 right-0 mt-6">
+              <div className="bg-black/80 backdrop-blur-sm p-4 rounded-lg shadow-lg">
+                <button
+                  type="submit"
+                  disabled={mutation.isPending}
+                  className="w-full bg-blue-500 text-white px-6 py-3 rounded-md text-base sm:text-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-600 transition-colors"
+                >
+                  {mutation.isPending ? "Publishing..." : "Publish Post"}
+                </button>
+              </div>
+            </div>
+          </form>
+        </Form>
+      </div>
+    </div>
   );
 }
