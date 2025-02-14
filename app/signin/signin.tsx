@@ -70,12 +70,7 @@ export default function SignInClient() {
           </motion.div>
         </motion.div>
       </div>
-      <motion.footer
-        initial={{ y: 50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5, delay: 1 }}
-        className="p-4 flex flex-row justify-center items-center border-t border-white/20"
-      >
+     <footer className="flex flex-row justify-center items-center p-4 border-t border-white/20">
         <p className="text-md md:text-lg text-gray-400">
           © 2025{" "}
           <a href="https://github.com/nexussjcet/nexus-spaces" className="hover:text-white transition-colors">
@@ -83,7 +78,7 @@ export default function SignInClient() {
           </a>
           : Built by students for students
         </p>
-      </motion.footer>
+      </footer>
     </div>
   )
 }
