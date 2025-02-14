@@ -23,7 +23,7 @@ export function ChatHeader({ showTitle }: { showTitle: boolean }) {
               transition={{ duration: 0.3, ease: "easeInOut" }}
               className="absolute left-1/2 transform -translate-x-1/2"
             >
-              <span>{title}</span>
+              <span className="text-ellipsis whitespace-nowrap">{title}</span>
             </motion.div>
           </div>
         )}
