@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { useSession } from "next-auth/react"
-import { motion } from "framer-motion"
+import { motion } from "motion/react"
 import { Button } from "@/components/ui/button"
 import SplitText from "../ui/split"
 import TiltedCard from "../ui/titled"
@@ -103,7 +103,7 @@ export function HomePage() {
         transition={{ duration: 1, delay: 1 }}
         className="absolute bottom-4 left-4 right-4 flex justify-between text-sm text-gray-400"
       >
-       <a href="https://github.com/nexussjcet"><span>© 2025 Nexus Spaces</span></a> 
+       <a href="https://github.com/nexussjcet"><span>© 2025 Nexus Spaces</span></a>
         <span>AI-driven social media platform</span>
       </motion.div>
     </div>

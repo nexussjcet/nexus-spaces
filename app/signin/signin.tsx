@@ -5,7 +5,7 @@ import Image from "next/image"
 import { InteractiveGridPattern } from "@/components/ui/interactive-grid-pattern"
 import { cn } from "@/lib/utils"
 import Link from "next/link"
-import { motion } from "framer-motion"
+import { motion } from "motion/react"
 
 export default function SignInClient() {
   return (
