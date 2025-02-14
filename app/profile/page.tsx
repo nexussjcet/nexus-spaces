@@ -1,16 +1,14 @@
-import Image from "next/image";
-import Link from "next/link";
 import { auth } from "@/auth";
-import { SignOutButton } from "@/components/custom/sign-out";
+import Navbar from "@/components/custom/navbar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { redirect } from "next/navigation";
 import { getUser } from "@/lib/db/models/users";
+import { GitBranchIcon, GitForkIcon, StarIcon } from "lucide-react";
+import { redirect } from "next/navigation";
 import { updateBio } from "./actions";
-import { GitForkIcon, StarIcon, GitBranchIcon } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 
 interface User {
   id: string;
@@ -43,20 +41,7 @@ export default async function Profile() {
 
   return (
     <div className="flex flex-col w-full portrait:h-full h-screen bg-black text-white ">
-      <nav className="px-4 py-2 flex flex-row gap-2 items-center border-b border-dashed border-neutral-600">
-        <Link
-          href="/"
-          title="Home"
-          className="flex flex-row items-center gap-2"
-        >
-          <Image src="/nexus.webp" width={70} height={70} alt="Nexus" />
-          <h2 className="text-md md:text-xl font-bold">NEXUS SPACES</h2>
-        </Link>
-        <div className="ml-auto flex flex-row gap-6 items-center">
-          <Link href="/">Home</Link>
-          <SignOutButton />
-        </div>
-      </nav>
+      <Navbar />
       <div className="flex justify-center w-full h-full">
         <div className="flex portrait:flex-wrap portrait:justify-center justify-around items-start xl:w-[1500px] md:w-[1200px] portrait:h-full gap-8 p-6">
           <div className="flex flex-col items-center portrait:w-full portrait:mb-7 portrait:mt-5 portrait:p-5 md:border border-neutral-800 p-10 rounded-xl">
@@ -90,10 +75,7 @@ export default async function Profile() {
                   required
                   className="rounded-xl bg-neutral-900 border-neutral-800 resize-none"
                 />
-                <Button
-                  type="submit"
-                  className="font-semibold mt-2 rounded-lg"
-                >
+                <Button type="submit" className="font-semibold mt-2 rounded-lg">
                   Update Bio
                 </Button>
               </form>
@@ -102,38 +84,46 @@ export default async function Profile() {
 
           <div className="grid md:grid-cols-2 gap-6 p-4 w-full max-w-[800px]">
             {repositories.length > 0 ? (
-              repositories.map((repo: any, index: number) => ( // eslint-disable-line @typescript-eslint/no-explicit-any
-                <div key={index} className="group">
-                  <div className="border border-neutral-800 rounded-xl p-6 transition-all hover:bg-neutral-900">
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center gap-2">
-                        <GitBranchIcon className="h-5 w-5 text-neutral-400" />
-                        <h3 className="font-semibold group-hover:text-white transition-colors">
-                          {repo.name}
-                        </h3>
+              repositories.map(
+                (
+                  repo: any,
+                  index: number, // eslint-disable-line @typescript-eslint/no-explicit-any
+                ) => (
+                  <div key={index} className="group">
+                    <div className="border border-neutral-800 rounded-xl p-6 transition-all hover:bg-neutral-900">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-2">
+                          <GitBranchIcon className="h-5 w-5 text-neutral-400" />
+                          <h3 className="font-semibold group-hover:text-white transition-colors">
+                            {repo.name}
+                          </h3>
+                        </div>
+                        {repo.languages?.[0] && (
+                          <Badge
+                            variant="secondary"
+                            className="bg-neutral-800 text-neutral-200"
+                          >
+                            {repo.languages[0].name}
+                          </Badge>
+                        )}
                       </div>
-                      {repo.languages?.[0] && (
-                        <Badge variant="secondary" className="bg-neutral-800 text-neutral-200">
-                          {repo.languages[0].name}
-                        </Badge>
-                      )}
-                    </div>
-                    <p className="mt-2 text-sm text-neutral-400 line-clamp-2 min-h-[40px]">
-                      {repo.description || "No description available"}
-                    </p>
-                    <div className="mt-4 flex items-center gap-6">
-                      <div className="flex items-center gap-2 text-sm text-neutral-400">
-                        <StarIcon className="h-4 w-4" />
-                        <span>{repo.stars?.toLocaleString() ?? 0}</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-sm text-neutral-400">
-                        <GitForkIcon className="h-4 w-4" />
-                        <span>{repo.forks?.toLocaleString() ?? 0}</span>
+                      <p className="mt-2 text-sm text-neutral-400 line-clamp-2 min-h-[40px]">
+                        {repo.description || "No description available"}
+                      </p>
+                      <div className="mt-4 flex items-center gap-6">
+                        <div className="flex items-center gap-2 text-sm text-neutral-400">
+                          <StarIcon className="h-4 w-4" />
+                          <span>{repo.stars?.toLocaleString() ?? 0}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-neutral-400">
+                          <GitForkIcon className="h-4 w-4" />
+                          <span>{repo.forks?.toLocaleString() ?? 0}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))
+                ),
+              )
             ) : (
               <p className="text-neutral-400 col-span-2 text-center p-4">
                 No repositories found.
