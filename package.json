@@ -46,6 +46,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "drizzle-orm": "^0.38.3",
+    "framer-motion": "^12.4.2",
     "html-react-parser": "^5.2.2",
     "lucide-react": "^0.469.0",
     "motion": "^12.4.1",

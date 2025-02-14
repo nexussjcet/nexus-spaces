@@ -1,15 +1,20 @@
-import { signIn } from "@/auth";
-import { Button } from "@/components/ui/button";
+"use client"
+
+import { githubSignIn } from "./actions"
+import { Button } from "@/components/ui/button"
+import { Github } from "lucide-react"
 
 export function SignInButton() {
   return (
-    <form
-      action={async () => {
-        "use server";
-        await signIn("github", { redirectTo: "/profile" });
-      }}
-    >
-      <Button type="submit">Sign in with GitHub</Button>
+    <form action={githubSignIn}>
+      <Button
+        type="submit"
+        size="lg"
+        className="gap-2 bg-white text-black hover:bg-gray-200"
+      >
+        <Github size={20} />
+        <p className="font-semibold">Signin with GitHub</p>
+      </Button>
     </form>
-  );
+  )
 }
