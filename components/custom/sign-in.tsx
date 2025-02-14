@@ -13,7 +13,7 @@ export function SignInButton() {
         className="gap-2 bg-white text-black hover:bg-gray-200"
       >
         <Github size={20} />
-        <p className="font-semibold">Signin with GitHub</p>
+        <p className="font-semibold">Login with GitHub</p>
       </Button>
     </form>
   )
