@@ -32,7 +32,7 @@ const MarkdownRenderer = ({ content }) => {
             {<CopyIcon className="h-4 w-4" />}
           </div>
         </div>
-        <div className="font-mono text-sm px-2 mb-[-6px]">{children}</div>
+        <div className="font-mono text-sm px-2 overflow-x-auto whitespace-pre-wrap">{children}</div>
       </pre>
     );
   }
