@@ -8,7 +8,7 @@ import { fetchAllConversation, fetchConversation, initConversation, deleteConver
 import { base64 } from "@/lib/format";
 
 type ChatContextProps = {
-  textareaRef: React.RefObject<HTMLInputElement | null>;
+  textareaRef: React.RefObject<HTMLTextAreaElement | null>;
   conversationList: ConversationMetadata[];
   selectedConversation: string;
   setSelectedConversation: React.Dispatch<React.SetStateAction<string>>;
@@ -58,7 +58,7 @@ export default function ChatContextProvider({ children }: { children: React.Reac
   const [streaming, setStreaming] = useState<boolean>(false);
   const [sidebarLoading, setSidebarLoading] = useState(true);
   const [messageLoading, setMessageLoading] = useState(true);
-  const textareaRef = useRef<HTMLInputElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const abortControllerRef = useRef<AbortController | null>(null);
   const stopControllerRef = useRef<AbortController | null>(null);
