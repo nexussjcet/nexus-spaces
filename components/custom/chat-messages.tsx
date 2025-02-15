@@ -98,11 +98,15 @@ export function ChatMessages() {
                 )}
                 <div className={`flex flex-col max-w-2xl ${chatMessage.isUser ? 'items-end' : ''}`}>
                   <h3 className="font-bold text-neutral-400">
-                    {!chatMessage.isUser && "Spacey"} 
+                    {!chatMessage.isUser && "Spacey"}
                   </h3>
-                  <div className={`${chatMessage.isUser ? 'bg-white text-black rounded-xl px-4 py-2 mt-6' : ''}`}>
+                  {chatMessage.isUser ? (
+                    <div className="bg-white text-black rounded-xl px-4 py-2 mt-6">
+                      {chatMessage.content.text}
+                    </div>
+                  ) : (
                     <MarkdownRender content={chatMessage.content.text} />
-                  </div>
+                  )}
                 </div>
               </div>
             </div>
